@@ -1,5 +1,5 @@
 ---
 title: new
-tags:
+tag:
     -new
 ---
