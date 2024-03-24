@@ -6,7 +6,7 @@
 <meta property="og:description" content="gcd__gcd 同余方程  pass   逆元${a \over b } \equiv a * {b^{-1}}(\bmod p)​$ 其中$b^{-1}$是$\bmod p$意义下 b 的逆元  $O(n)​$   12inv[1]&#x3D;1;for(int i&#x3D;2;i&lt;&#x3D;n;++i)inv[i]&#x3D;(p-p&#x2F;i)*inv[p%i]%p;   费马小定理$O(\log (n))​$   $a *">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-03-23T11:18:21.259Z">
-<meta property="article:modified_time" content="2024-03-24T09:26:30.159Z">
+<meta property="article:modified_time" content="2024-03-24T09:35:52.395Z">
 <meta property="article:author" content="zyzzyh">
 <meta property="article:tag" content="数学">
 <meta name="twitter:card" content="summary"><link rel="shortcut icon" href="/img/favicon1.png"><link rel="canonical" href="http://zyzzyh.github.io/2024/03/23/%E6%95%B0%E8%AE%BA/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
@@ -54,7 +54,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2024-03-24 17:26:30'
+  postUpdate: '2024-03-24 17:35:52'
 }</script><script>(win=>{
       win.saveToLocal = {
         set: (key, value, ttl) => {
@@ -151,7 +151,7 @@
         }
       }
       detectApple()
-    })(window)</script><meta name="generator" content="Hexo 7.1.1"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/null" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">6</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="zzzyyyyhhhhh的博客"><span class="site-name">zzzyyyyhhhhh的博客</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">数论</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2024-03-23T11:18:21.259Z" title="Created 2024-03-23 19:18:21">2024-03-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2024-03-24T09:26:30.159Z" title="Updated 2024-03-24 17:26:30">2024-03-24</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="数论"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="gcd"><a href="#gcd" class="headerlink" title="gcd"></a>gcd</h2><p><code>__gcd</code></p>
+    })(window)</script><meta name="generator" content="Hexo 7.1.1"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/null" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">6</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="zzzyyyyhhhhh的博客"><span class="site-name">zzzyyyyhhhhh的博客</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">数论</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2024-03-23T11:18:21.259Z" title="Created 2024-03-23 19:18:21">2024-03-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2024-03-24T09:35:52.395Z" title="Updated 2024-03-24 17:35:52">2024-03-24</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="数论"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="gcd"><a href="#gcd" class="headerlink" title="gcd"></a>gcd</h2><p><code>__gcd</code></p>
 <p>同余方程</p>
 <blockquote>
 <p>pass</p>
@@ -193,13 +193,13 @@
 <p>$ans&#x3D;\begin{cases}x \equiv b_1(\bmod a_1)  \\ x \equiv b_2(\bmod a_2)  \\  x \equiv b_3(\bmod a_3)  \\…  \\ x \equiv b_n(\bmod a_n)\end{cases}​$</p>
 <p>$ans&#x3D;b_1 * a_2 a_3 * (a_2 * a_3) ^ {-1} (a_1 ^ {-1},a_3^{-1}为a_2,a_3 \bmod a_1下的逆元)+b_2 * a_1 a_3 * (a_1*a_3)^{-1} +b_3 * a_1 a_2 * (a_1 * a_2)^{-1}​$</p>
 <hr>
-<h2 id="欧拉函数"><a href="#欧拉函数" class="headerlink" title="欧拉函数"></a>欧拉函数</h2><p>$\varphi(i)​$</p>
-<p>积性函数：$\varphi(xy)&#x3D;\varphi(x)*\varphi (y) \ \ \ \ \ (gcd(x,y)&#x3D;&#x3D;1) $</p>
+<h2 id="欧拉函数"><a href="#欧拉函数" class="headerlink" title="欧拉函数"></a>欧拉函数</h2><p>$\varphi(i)$ 所有&lt;&#x3D;i的与i互质的数的个数$(\varphi(1)&#x3D;1)$</p>
+<p>积性函数：$\varphi(xy)&#x3D;\varphi(x)*\varphi (y) \ \ \ \ \ (gcd(x,y)&#x3D;&#x3D;1) ​$</p>
 <blockquote>
 <p>-&gt;$\varphi (p^k)&#x3D;p^k-p^(k-1)$</p>
 </blockquote>
 <blockquote>
-<p>-&gt; $n&#x3D; \displaystyle\prod_{i&#x3D;1}^s p_i^{k_i}$ 其中$p_i$为n的质因子</p>
+<p>-&gt; $n&#x3D; \displaystyle\prod_{i&#x3D;1}^s p_i^{k_i}​$ 其中$p_i​$为n的质因子</p>
 <p>-&gt; $\varphi(n)&#x3D;n*\displaystyle\prod_{i&#x3D;1}^s(1-\frac1{p_i})$</p>
 </blockquote>
 <hr>
