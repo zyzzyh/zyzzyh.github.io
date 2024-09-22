@@ -156,6 +156,7 @@ export function bubbleCursor(options) {
     this.canv = canvasItem;
 
     this.baseDimension = 4;
+    this.scalesize=Math.random()+0.8;
 
     this.update = function (context) {
       this.position.x += this.velocity.x;
@@ -167,7 +168,7 @@ export function bubbleCursor(options) {
       this.lifeSpan--;
 
       const scale =
-        0.3 + (this.initialLifeSpan - this.lifeSpan) / this.initialLifeSpan;
+        (0.3 + (this.initialLifeSpan - this.lifeSpan) / this.initialLifeSpan)*this.scalesize;
 
       context.fillStyle = "#e6f1f7";
       context.strokeStyle = "#3a92c5";

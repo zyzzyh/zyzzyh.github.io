@@ -1,2 +1,2 @@
 import { bubbleCursor } from "/zyhjs/bubbleCursor.js";
-new bubbleCursor();
+new bubbleCursor({canvImages:["/img/cursor_effect.png"]});
