@@ -4,6 +4,7 @@ export function bubbleCursor(options) {
 
   let width = window.innerWidth;
   let height = window.innerHeight;
+  let lenlen=width*width+height*height;
   let cursor = { x: width / 2, y: width / 2 };
   let particles = [];
   let canvas, context, animationFrame;
@@ -87,7 +88,6 @@ export function bubbleCursor(options) {
       }
     }
   }
-
   function onMouseMove(e) {
     if (hasWrapperEl) {
       const boundingRect = element.getBoundingClientRect();
@@ -97,8 +97,8 @@ export function bubbleCursor(options) {
       cursor.x = e.clientX;
       cursor.y = e.clientY;
     }
-
-    addParticle(cursor.x, cursor.y);
+    for(let i=0;i<5;i++)
+      addParticle(cursor.x, cursor.y);
   }
 
   function addParticle(x, y, img) {
@@ -144,7 +144,7 @@ export function bubbleCursor(options) {
   };
 
   function Particle(x, y, canvasItem) {
-    const lifeSpan = Math.floor(Math.random() * 20 + 20);
+    const lifeSpan = Math.floor(Math.random() * 10 + 10);
     this.initialLifeSpan = lifeSpan; //
     this.lifeSpan = lifeSpan; //ms
     this.velocity = {
@@ -161,7 +161,7 @@ export function bubbleCursor(options) {
       this.position.x += this.velocity.x;
       this.position.y += this.velocity.y;
       // this.velocity.x += ((Math.random() < 0.5 ? -1 : 1) * 2) / 75;
-      this.velocity.x += ((Math.random() < 0.5 ? -1 : 1) * 2) / 75;
+      this.velocity.x += ((Math.random() < 0.5 ? -1 : 1) * 2) / 600;
       this.velocity.y += ((Math.random() < 0.5 ? -1 : 1) * Math.random()) / 600;
       // this.velocity.y -= Math.random() / 600;
       this.lifeSpan--;
