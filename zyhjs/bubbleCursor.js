@@ -8,7 +8,8 @@ export function bubbleCursor(options) {
   let cursor = { x: width / 2, y: width / 2 };
   let particles = [];
   let canvas, context, animationFrame;
-
+  let img=new Image()
+  img.src="/img/cursor_effect.png"
   let canvImages = [];
 
   const prefersReducedMotion = window.matchMedia(
@@ -162,29 +163,30 @@ export function bubbleCursor(options) {
       this.position.x += this.velocity.x;
       this.position.y += this.velocity.y;
       // this.velocity.x += ((Math.random() < 0.5 ? -1 : 1) * 2) / 75;
-      this.velocity.x += ((Math.random() < 0.5 ? -1 : 1) * 2) / 600;
+      this.velocity.x += ((Math.random() < 0.5 ? -1 : 1) * Math.random()) / 600;
+      // ((Math.rand
+      // context.beginPath();om() < 0.5 ? -1 : 1) * 2) / 600;
       this.velocity.y += ((Math.random() < 0.5 ? -1 : 1) * Math.random()) / 600;
       // this.velocity.y -= Math.random() / 600;
       this.lifeSpan--;
 
       const scale =
         (0.3 + (this.initialLifeSpan - this.lifeSpan) / this.initialLifeSpan)*this.scalesize;
+      context.drawImage(img,this.position.x,this.position.y,this.baseDimension * scale,this.baseDimension * scale);
+      // context.fillStyle = "#e6f1f7";
+      // context.strokeStyle = "#3a92c5";
+      // context.arc(
+      //   this.position.x - (this.baseDimension / 2) * scale,
+      //   this.position.y - this.baseDimension / 2,
+      //   this.baseDimension * scale,
+      //   0,
+      //   2 * Math.PI
+      // );
 
-      context.fillStyle = "#e6f1f7";
-      context.strokeStyle = "#3a92c5";
-      context.beginPath();
-      context.arc(
-        this.position.x - (this.baseDimension / 2) * scale,
-        this.position.y - this.baseDimension / 2,
-        this.baseDimension * scale,
-        0,
-        2 * Math.PI
-      );
+      // context.stroke();
+      // context.fill();
 
-      context.stroke();
-      context.fill();
-
-      context.closePath();
+      // context.closePath();
     };
   }
 
