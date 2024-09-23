@@ -25,17 +25,22 @@
 }
 
 /* 所有页面背景 */
-[data-theme="dark"] #post,[data-theme="dark"] #aside_content .card-widget, [data-theme="dark"] #recent-posts>.recent-post-item,[data-theme="dark"] .post,[data-theme="dark"] .layout_page>div:first-child:not(.recent-posts),[data-theme="dark"] .layout_post>#page,[data-theme="dark"] .layout_post>#post,[data-theme="dark"] .read-mode .layout_post>#post
+[data-theme="dark"] #post,[data-theme="dark"] #aside_content,[data-theme="dark"] #aside_content .card-widget,[data-theme="dark"] #recent-posts>.recent-post-item,[data-theme="dark"] .post,[data-theme="dark"] .layout_page>div:first-child:not(.recent-posts),[data-theme="dark"] .layout_post>#page,[data-theme="dark"] .layout_post>#post,[data-theme="dark"] .read-mode .layout_post>#post
 {
     /* 以下代表透明度为0.7 */
-    background: rgba(0,0,0,.8);
+    background: rgba(0,0,0,.5);
 }
 /*侧边卡片的透明度 */
 [data-theme="dark"] :root {
-  --card-bg: rgba(0, 0, 0, .3);
+  --card-bg: rgba(0, 0, 0, .5);
 }
 /* 页脚透明 */
 [data-theme="dark"] #footer {
     /* 以下代表透明度为0.7 */
-    background: rgba(0,0,0, .0);
+    background: rgba(0,0,0, .8);
+}
+
+[data-theme="dark"] .layout_post>#post {
+    /* 以下代表透明度为0.7 可以自行修改*/
+    background: rgba(0,0,0,.8);
 }
