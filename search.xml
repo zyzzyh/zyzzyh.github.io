@@ -4,83 +4,6 @@
   
     
     <entry>
-      <title>new</title>
-      <link href="/2024/09/21/new/"/>
-      <url>/2024/09/21/new/</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> -new </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Hello World</title>
-      <link href="/2024/09/21/hello-world/"/>
-      <url>/2024/09/21/hello-world/</url>
-      
-        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> -tset </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>test</title>
-      <link href="/2024/09/21/test/"/>
-      <url>/2024/09/21/test/</url>
-      
-        <content type="html"><![CDATA[<h1 id="一级标题"><a href="#一级标题" class="headerlink" title="一级标题"></a>一级标题</h1><h6 id="六级标题"><a href="#六级标题" class="headerlink" title="六级标题"></a>六级标题</h6><hr><hr><h2 id="a"><a href="#a" class="headerlink" title="a"></a>a</h2><h2 id="a-a"><a href="#a-a" class="headerlink" title="|| a || a"></a>|| a || a</h2><p>$123$</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config set strict-ssl false </span><br></pre></td></tr></table></figure><p><a href="https://blog.csdn.net/wufengfeng130/article/details/131251961">use</a></p><p><a href="https://butterfly.js.org/posts/4aa8abbe/#%E8%8F%9C%E5%96%AE-%E7%9B%AE%E9%8C%84">use</a></p>]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>使用</title>
-      <link href="/2024/09/21/%E4%BD%BF%E7%94%A8/"/>
-      <url>/2024/09/21/%E4%BD%BF%E7%94%A8/</url>
-      
-        <content type="html"><![CDATA[<div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="Oh, this is an invalid password. Check and try again, please." data-whm="OOPS, these decrypted content may changed, but you can still have a look.">  <script id="hbeData" type="hbeData" data-hmacdigest="72292b0b5cbd93a81e129a1bf87923d64b5e02c83ffb5122fab27a47cd7543bd">48bf2b3dc5748a452040de3ea53899a1dae055ffa521280a0fb46f80be4efd920253b2d348fc4089e3cf573a0832b8ea0ad68a72b6db74420390cb2fec6f33d3c55832330178ce01e7a9a994307fb7ab88a947188fe8b58dc5012f82fa32eb5205c2990721d2569f9171b78cc394345905c22c1f1bf736d343f4bd0285cbe89db405bf09768babbf1061d667fe5e2e3d39a2e1f24c0f2fbd4f6d8c820fbf456a50711354ffb96a32ef9608039748b5bff5f16bcae68ae288efa51d6e02f278d01f7ba162cebddaa807d213f43d54c0b0ce6aba382d29c5a5e37f1e5a895caf0c5749c19626e8cd4f26e1ce5a8e7db19ade7f2b80a509e0c81ffce421c0d5ed52c74a317c14699292e5e66f72138b1ff7db3816af3495854ecc55c7ad439c6096a95209b30dc53d1649c4ca01901f71e1</script>  <div class="hbe hbe-content">    <div class="hbe hbe-input hbe-input-default">      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">        <span class="hbe hbe-input-label-content hbe-input-label-content-default">hugoi's npy(bushi)</span>      </label>    </div>  </div></div><script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>宿舍日志</title>
-      <link href="/2024/09/21/%E5%AE%BF%E8%88%8D%E6%97%A5%E5%BF%97/"/>
-      <url>/2024/09/21/%E5%AE%BF%E8%88%8D%E6%97%A5%E5%BF%97/</url>
-      
-        <content type="html"><![CDATA[<h3 id="开学"><a href="#开学" class="headerlink" title="开学"></a>开学</h3><ol><li><p>同学们可以自带床单被褥</p></li><li><p>床单被罩花色不一致要扣分</p></li></ol><h3 id="2024春节宿舍广播会"><a href="#2024春节宿舍广播会" class="headerlink" title="2024春节宿舍广播会"></a>2024春节宿舍广播会</h3><p>：同学们，寒假正好赶上春节</p><h3 id="2024-3住宿生大会"><a href="#2024-3住宿生大会" class="headerlink" title="2024.3住宿生大会"></a>2024.3住宿生大会</h3><ul><li>主题：我深表同情，但无能为力。</li></ul><p>1.我们不让带行李箱的原因是行李箱会挤占</p>]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>题解：P5619 [DBOI2019] 持矢</title>
       <link href="/2024/09/20/%E9%A2%98%E8%A7%A3%EF%BC%9AP5619%20%5BDBOI2019%5D%20%E6%8C%81%E7%9F%A2/"/>
       <url>/2024/09/20/%E9%A2%98%E8%A7%A3%EF%BC%9AP5619%20%5BDBOI2019%5D%20%E6%8C%81%E7%9F%A2/</url>
@@ -132,6 +55,19 @@
             <tag> stable_diffusion </tag>
             
         </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>使用</title>
+      <link href="/2024/09/15/%E4%BD%BF%E7%94%A8/"/>
+      <url>/2024/09/15/%E4%BD%BF%E7%94%A8/</url>
+      
+        <content type="html"><![CDATA[<div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="Oh, this is an invalid password. Check and try again, please." data-whm="OOPS, these decrypted content may changed, but you can still have a look.">  <script id="hbeData" type="hbeData" data-hmacdigest="72292b0b5cbd93a81e129a1bf87923d64b5e02c83ffb5122fab27a47cd7543bd">48bf2b3dc5748a452040de3ea53899a1dae055ffa521280a0fb46f80be4efd920253b2d348fc4089e3cf573a0832b8ea0ad68a72b6db74420390cb2fec6f33d3c55832330178ce01e7a9a994307fb7ab88a947188fe8b58dc5012f82fa32eb5205c2990721d2569f9171b78cc394345905c22c1f1bf736d343f4bd0285cbe89db405bf09768babbf1061d667fe5e2e3d39a2e1f24c0f2fbd4f6d8c820fbf456a50711354ffb96a32ef9608039748b5bff5f16bcae68ae288efa51d6e02f278d01f7ba162cebddaa807d213f43d54c0b0ce6aba382d29c5a5e37f1e5a895caf0c5749c19626e8cd4f26e1ce5a8e7db19ade7f2b80a509e0c81ffce421c0d5ed52c74a317c14699292e5e66f72138b1ff7db3816af3495854ecc55c7ad439c6096a95209b30dc53d1649c4ca01901f71e1</script>  <div class="hbe hbe-content">    <div class="hbe hbe-input hbe-input-default">      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">        <span class="hbe hbe-input-label-content hbe-input-label-content-default">hugoi's npy(bushi)</span>      </label>    </div>  </div></div><script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">]]></content>
+      
+      
       
     </entry>
     
@@ -381,6 +317,19 @@
     
     
     <entry>
+      <title>宿舍日志</title>
+      <link href="/2024/03/21/%E5%AE%BF%E8%88%8D%E6%97%A5%E5%BF%97/"/>
+      <url>/2024/03/21/%E5%AE%BF%E8%88%8D%E6%97%A5%E5%BF%97/</url>
+      
+        <content type="html"><![CDATA[<h3 id="开学"><a href="#开学" class="headerlink" title="开学"></a>开学</h3><ol><li><p>同学们可以自带床单被褥</p></li><li><p>床单被罩花色不一致要扣分</p></li></ol><h3 id="2024春节宿舍广播会"><a href="#2024春节宿舍广播会" class="headerlink" title="2024春节宿舍广播会"></a>2024春节宿舍广播会</h3><p>：同学们，寒假正好赶上春节</p><h3 id="2024-3住宿生大会"><a href="#2024-3住宿生大会" class="headerlink" title="2024.3住宿生大会"></a>2024.3住宿生大会</h3><ul><li>主题：我深表同情，但无能为力。</li></ul><p>1.我们不让带行李箱的原因是行李箱会挤占</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>数论</title>
       <link href="/2024/03/16/%E6%95%B0%E8%AE%BA/"/>
       <url>/2024/03/16/%E6%95%B0%E8%AE%BA/</url>
@@ -444,6 +393,44 @@
     
     
     <entry>
+      <title>new</title>
+      <link href="/2024/03/16/new/"/>
+      <url>/2024/03/16/new/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> -new </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Hello World</title>
+      <link href="/2024/03/16/hello-world/"/>
+      <url>/2024/03/16/hello-world/</url>
+      
+        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> -tset </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>P3551题解</title>
       <link href="/2024/03/16/%E9%A2%98%E8%A7%A3_P3551_%5BPOI2013%5D_USU-Take-out/"/>
       <url>/2024/03/16/%E9%A2%98%E8%A7%A3_P3551_%5BPOI2013%5D_USU-Take-out/</url>
@@ -457,6 +444,19 @@
             <tag> 题解 </tag>
             
         </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>test</title>
+      <link href="/2024/03/06/test/"/>
+      <url>/2024/03/06/test/</url>
+      
+        <content type="html"><![CDATA[<h1 id="一级标题"><a href="#一级标题" class="headerlink" title="一级标题"></a>一级标题</h1><h6 id="六级标题"><a href="#六级标题" class="headerlink" title="六级标题"></a>六级标题</h6><hr><hr><h2 id="a"><a href="#a" class="headerlink" title="a"></a>a</h2><h2 id="a-a"><a href="#a-a" class="headerlink" title="|| a || a"></a>|| a || a</h2><p>$123$</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config set strict-ssl false </span><br></pre></td></tr></table></figure><p><a href="https://blog.csdn.net/wufengfeng130/article/details/131251961">use</a></p><p><a href="https://butterfly.js.org/posts/4aa8abbe/#%E8%8F%9C%E5%96%AE-%E7%9B%AE%E9%8C%84">use</a></p>]]></content>
+      
+      
       
     </entry>
     
