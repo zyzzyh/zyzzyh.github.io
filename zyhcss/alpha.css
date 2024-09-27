@@ -31,11 +31,11 @@
   border: 2px solid #ffd000;
 }
 
-#recent-posts>.recent-post-item:hover,
+#recent-posts>.recent-post-item:hover
 {
     background: rgba(255,255,255,.8);
     box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.0);
-    border: 2px solid #ff5200;
+    border: 2px solid #8900eb;
 }
 #aside-content .card-widget
 {
@@ -47,7 +47,7 @@
 }
 #aside-content .card-widget:hover
 {
-  border: 2px solid #00ffee;    
+  border: 2px solid #8900eb;    
 }
 
 /*:root {
@@ -125,5 +125,5 @@
 }
 [data-theme="dark"] #aside-content .card-widget:hover
 {
-  border: 2px solid #00ffee;    
+  border: 2px solid #8900eb;    
 }
