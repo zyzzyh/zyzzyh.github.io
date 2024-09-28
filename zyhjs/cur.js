@@ -1,16 +1,9 @@
 (function(window, document) {
 	let $$this,
 	  defaults = {
-		drawType: 1, //1跳动的彩色线条 2金闪闪 3大数据专用 4街头涂鸦 5连线点阵
-		leaveAutoer: true, //鼠标移出后自动绘制 drawType为1时生效
+	  	deg1: 2,
+	  	len1: 7,
 		showTime: 20, //绘制的线条显示的时间 drawType为1时生效
-		maxWidth: 20, //最大宽度 drawType为1时生效，默认值20
-		minWidth: 5, //最小宽度 drawType为1时生效，默认值5
-		color: "", //颜色 drawType为2和5时生效 2默认值#F8EC85、5默认值#A5FBFF
-		dotColor: '',//点的颜色 drawType为3时生效，默认值#9CD9F9
-		lineColor: '',//线的颜色 drawType为3时生效，默认值#9CD9F9
-		number: 0,//点的数量 drawType为5时生效，默认值8000,
-		colors: ['#FF1461', '#18FF92', '#5A87FF', '#FBF38C'],//礼花颜色
 		multi: 1.5,//放大倍率
 		multiDom: null,//需要放大的dom节点对象
 		border: null
@@ -56,13 +49,7 @@
 			style.innerHTML = cssStr;
 			document.getElementsByTagName("head").item(0).appendChild(style);
 			//创建画布
-			if($$this.options.drawType === 4){
-				let domSvgBox = document.createElement("div");
-				domSvgBox.id = 'mouser';
-				domSvgBox.style = 'position: fixed; top: 0px; left: 0px; width: 100vw; height: 100vh; z-index: 2147483647; pointer-events: none;';
-				domSvgBox.innerHTML = `<svg id="stage" width="1920" height="1080" xmlns="http://www.w3.org/2000/svg"></svg>`;
-				document.body.appendChild(domSvgBox);
-			}else{
+			{
 				let domCanvas = document.createElement("canvas");
 				domCanvas.id = "mouser";
 				domCanvas.style =
@@ -73,12 +60,6 @@
 				canvas.width = width;
 				canvas.height = height;
 				canvas.clipContent = false; //当子项目的边界超出此容器时，显示子项目在此容器中。
-				if($$this.options.drawType === 8){
-					let childCanvas = document.createElement("canvas");
-					childCanvas.id = "offCanvas";
-					childCanvas.style = "position: fixed;top: 200vh;left: 200vw;width: 100%;height: 100%;z-index: -1;";
-					document.body.appendChild(childCanvas);
-				}
 				function resize() {
 					width = window.innerWidth;
 					height = window.innerHeight;
@@ -87,8 +68,7 @@
 				}
 				window.addEventListener('resize', resize);
 			}
-			switch ($$this.options.drawType) {
-				case 1: //跳动的彩色线条
+			{
 					let body = [];
 					let mouse_pos_x = canvas.width / 2;
 					let mouse_pos_y = canvas.height / 2;
@@ -100,6 +80,8 @@
 					let t = 0;
 					let op = 1;
 					let bodyLength = $$this.options.showTime;
+					let deg = $$this.options.deg1;
+					let len = $$this.options.len1;
 					document.body.addEventListener('mousemove', mouse_track);
 
 					function mouse_track(event) {
@@ -139,6 +121,8 @@
 					}
 					// 绘制
 					function draw() {
+						deg+=0.27431;
+						if(deg>3.1415926)deg-=6.2831852;
 						loop++;
 						if (loop == 5) {
 							step++;
@@ -151,8 +135,8 @@
 							body[i].x = body[i - 1].x;
 							body[i].y = body[i - 1].y;
 						}
-						body[0].x = mouse_pos_x;
-						body[0].y = mouse_pos_y;
+						body[0].x = mouse_pos_x+len*Math.sin(deg);
+						body[0].y = mouse_pos_y+len*Math.cos(deg);
 						ctx.lineWidth = line;
 						ctx.strokeStyle = "rgb(" + red[step] + "," + grn[step] + "," + blu[step] + ")";
 						ctx.fillStyle = "rgb(" + red[step] + "," + grn[step] + "," + blu[step] + ")";
@@ -177,12 +161,9 @@
 						window.requestAnimationFrame(draw);
 					}
 					window.requestAnimationFrame(draw);
-					break;
-				default:
-					break;
 			}
 		}
 	};
 	window.Mouser = mouser;
 })(window, document);
-mouser = new Mouser();
+let mouser = new Mouser();
