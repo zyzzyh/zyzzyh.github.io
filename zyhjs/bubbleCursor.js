@@ -1,4 +1,4 @@
-export function bubbleCursor(options) {
+function bubbleCursor(options) {
   let hasWrapperEl = options && options.element;
   let element = hasWrapperEl || document.body;
 
@@ -98,7 +98,7 @@ export function bubbleCursor(options) {
       cursor.x = e.clientX;
       cursor.y = e.clientY;
     }
-    for(let i=0;i<5;i++)
+    for(let i=0;i<500;i++)
       addParticle(cursor.x, cursor.y);
   }
 
@@ -157,7 +157,7 @@ export function bubbleCursor(options) {
     this.canv = canvasItem;
 
     this.baseDimension = 4;
-    this.scalesize=Math.random()+0.8;
+    this.scalesize=Math.random()+1.2;
 
     this.update = function (context) {
       this.position.x += this.velocity.x;
@@ -197,3 +197,4 @@ export function bubbleCursor(options) {
     destroy: destroy
   }
 }
+new bubbleCursor();
