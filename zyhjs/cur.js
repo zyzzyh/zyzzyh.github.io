@@ -95,7 +95,7 @@
 					let delta = 1;
 					let step = 0;
 					let loop = 0;
-					let line = 18;
+					let line = 10;
 					let TWO_PI = 2 * Math.PI;
 					let t = 0;
 					let op = 1;
