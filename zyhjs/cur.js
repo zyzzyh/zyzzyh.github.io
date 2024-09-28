@@ -42,7 +42,7 @@
 		},
 		init: function() {
 			//设置样式
-			const cssStr = `body{width:100vw;min-height:100vh;padding:0;margin:0;}`;
+			const cssStr = `body{width:100vw;min-height:100vh;padding:0;margin:0;z-index:2002;}`;
 			let style = document.createElement("style");
 			style.type = "text/css";
 			style.id = "mouser-style";
