@@ -1,197 +1,56 @@
 .pace {
-	-webkit-pointer-events: none;
 	pointer-events: none;
-
-	-webkit-user-select: none;
-	-moz-user-select: none;
 	user-select: none;
-
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-ms-box-sizing: border-box;
-	-o-box-sizing: border-box;
-	box-sizing: border-box;
-
-	-webkit-border-radius: 1.0vw;
-	-moz-border-radius: 1.0vw;
-	border-radius: 1.0vw;
-
-	-webkit-background-clip: padding-box;
-	-moz-background-clip: padding;
-	background-clip: padding-box;
-
-	z-index: 2000;
+	z-index: 2;
 	position: fixed;
 	margin: auto;
-	top: -80vw;
+	top: 4px;
 	left: 0;
 	right: 0;
-	bottom: 0;
-	width: 20vw;
-	height: 5vw;
+	height: 8px;
+	border-radius: 8px;
+	width: 6rem;
+	background: #eaecf2;
 	overflow: hidden;
-}
-
-.pace .pace-progress {
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-ms-box-sizing: border-box;
-	-o-box-sizing: border-box;
+  }
+  
+  .pace-inactive .pace-progress {
+	opacity: 0;
+	transition: 0.3s ease-in;
+  }
+  
+  .pace.pace-inactive {
+	opacity: 0;
+	transition: 0.3s;
+	top: -8px;
+  }
+  
+  .pace .pace-progress {
 	box-sizing: border-box;
-
-	-webkit-border-radius: 0.2vw;
-	-moz-border-radius: 0.2vw;
-	border-radius: 0.2vw;
-
-	-webkit-background-clip: padding-box;
-	-moz-background-clip: padding;
-	background-clip: padding-box;
-
-	-webkit-transform: translate3d(0, 0, 0);
 	transform: translate3d(0, 0, 0);
-
+	position: fixed;
+	z-index: 2;
 	display: block;
 	position: absolute;
+	top: 0;
 	right: 100%;
-	margin-right: -0.7vw;
-	width: 93%;
-	top: 0.7vw;
-	height: 1.4vw;
-	font-size: 1.2vw;
-	background: #ffc72e;
-	color: #ffc72e;
-	line-height: 6.0vw;
-	font-weight: bold;
-	font-family: Helvetica, Arial, "Lucida Grande", sans-serif;
-
-	-webkit-box-shadow: 12vw 0 #fff, 24vw 0 #fff;
-	-ms-box-shadow: 12vw 0 #fff, 24vw 0 #fff;
-	box-shadow: 12vw 0 #fff, 24vw 0 #fff;
-}
-
-.pace .pace-progress:after {
-	content: attr(data-progress-text);
-	display: inline-block;
-	position: fixed;
-	width: 4.5vw;
-	text-align: right;
-	right: 0;
-	padding-right: 1.6vw;
-	top: 0.4vw;
-}
-
-.pace pace-progress[data-progress-text="0%"]:after { right: -20.0vw }
-.pace pace-progress[data-progress-text="1%"]:after { right: -19.814vw }
-.pace pace-progress[data-progress-text="2%"]:after { right: -19.628vw }
-.pace pace-progress[data-progress-text="3%"]:after { right: -19.442vw }
-.pace pace-progress[data-progress-text="4%"]:after { right: -19.256vw }
-.pace pace-progress[data-progress-text="5%"]:after { right: -19.07vw }
-.pace pace-progress[data-progress-text="6%"]:after { right: -18.884vw }
-.pace pace-progress[data-progress-text="7%"]:after { right: -18.698vw }
-.pace pace-progress[data-progress-text="8%"]:after { right: -18.512vw }
-.pace pace-progress[data-progress-text="9%"]:after { right: -18.326vw }
-.pace pace-progress[data-progress-text="10%"]:after { right: -18.14vw }
-.pace pace-progress[data-progress-text="11%"]:after { right: -17.954vw }
-.pace pace-progress[data-progress-text="12%"]:after { right: -17.768vw }
-.pace pace-progress[data-progress-text="13%"]:after { right: -17.582vw }
-.pace pace-progress[data-progress-text="14%"]:after { right: -17.396vw }
-.pace pace-progress[data-progress-text="15%"]:after { right: -17.21vw }
-.pace pace-progress[data-progress-text="16%"]:after { right: -17.024vw }
-.pace pace-progress[data-progress-text="17%"]:after { right: -16.838vw }
-.pace pace-progress[data-progress-text="18%"]:after { right: -16.652vw }
-.pace pace-progress[data-progress-text="19%"]:after { right: -16.466vw }
-.pace pace-progress[data-progress-text="20%"]:after { right: -16.28vw }
-.pace pace-progress[data-progress-text="21%"]:after { right: -16.094vw }
-.pace pace-progress[data-progress-text="22%"]:after { right: -15.908vw }
-.pace pace-progress[data-progress-text="23%"]:after { right: -15.722vw }
-.pace pace-progress[data-progress-text="24%"]:after { right: -15.536vw }
-.pace pace-progress[data-progress-text="25%"]:after { right: -15.35vw }
-.pace pace-progress[data-progress-text="26%"]:after { right: -15.164vw }
-.pace pace-progress[data-progress-text="27%"]:after { right: -14.978vw }
-.pace pace-progress[data-progress-text="28%"]:after { right: -14.792vw }
-.pace pace-progress[data-progress-text="29%"]:after { right: -14.606vw }
-.pace pace-progress[data-progress-text="30%"]:after { right: -14.42vw }
-.pace pace-progress[data-progress-text="31%"]:after { right: -14.234vw }
-.pace pace-progress[data-progress-text="32%"]:after { right: -14.048vw }
-.pace pace-progress[data-progress-text="33%"]:after { right: -13.862vw }
-.pace pace-progress[data-progress-text="34%"]:after { right: -13.676vw }
-.pace pace-progress[data-progress-text="35%"]:after { right: -13.49vw }
-.pace pace-progress[data-progress-text="36%"]:after { right: -13.304vw }
-.pace pace-progress[data-progress-text="37%"]:after { right: -13.118vw }
-.pace pace-progress[data-progress-text="38%"]:after { right: -12.932vw }
-.pace pace-progress[data-progress-text="39%"]:after { right: -12.746vw }
-.pace pace-progress[data-progress-text="40%"]:after { right: -12.56vw }
-.pace pace-progress[data-progress-text="41%"]:after { right: -12.374vw }
-.pace pace-progress[data-progress-text="42%"]:after { right: -12.188vw }
-.pace pace-progress[data-progress-text="43%"]:after { right: -12.002vw }
-.pace pace-progress[data-progress-text="44%"]:after { right: -11.816vw }
-.pace pace-progress[data-progress-text="45%"]:after { right: -11.63vw }
-.pace pace-progress[data-progress-text="46%"]:after { right: -11.444vw }
-.pace pace-progress[data-progress-text="47%"]:after { right: -11.258vw }
-.pace pace-progress[data-progress-text="48%"]:after { right: -11.072vw }
-.pace pace-progress[data-progress-text="49%"]:after { right: -10.886vw }
-.pace pace-progress[data-progress-text="50%"]:after { right: -10.7vw }
-.pace pace-progress[data-progress-text="51%"]:after { right: -10.514vw }
-.pace pace-progress[data-progress-text="52%"]:after { right: -10.328vw }
-.pace pace-progress[data-progress-text="53%"]:after { right: -10.142vw }
-.pace pace-progress[data-progress-text="54%"]:after { right: -9.956vw }
-.pace pace-progress[data-progress-text="55%"]:after { right: -9.77vw }
-.pace pace-progress[data-progress-text="56%"]:after { right: -9.584vw }
-.pace pace-progress[data-progress-text="57%"]:after { right: -9.398vw }
-.pace pace-progress[data-progress-text="58%"]:after { right: -9.212vw }
-.pace pace-progress[data-progress-text="59%"]:after { right: -9.026vw }
-.pace pace-progress[data-progress-text="60%"]:after { right: -8.84vw }
-.pace pace-progress[data-progress-text="61%"]:after { right: -8.653999999999999vw }
-.pace pace-progress[data-progress-text="62%"]:after { right: -8.468vw }
-.pace pace-progress[data-progress-text="63%"]:after { right: -8.282vw }
-.pace pace-progress[data-progress-text="64%"]:after { right: -8.096000000000001vw }
-.pace pace-progress[data-progress-text="65%"]:after { right: -7.91vw }
-.pace pace-progress[data-progress-text="66%"]:after { right: -7.724vw }
-.pace pace-progress[data-progress-text="67%"]:after { right: -7.538vw }
-.pace pace-progress[data-progress-text="68%"]:after { right: -7.352vw }
-.pace pace-progress[data-progress-text="69%"]:after { right: -7.166vw }
-.pace pace-progress[data-progress-text="70%"]:after { right: -6.98vw }
-.pace pace-progress[data-progress-text="71%"]:after { right: -6.794vw }
-.pace pace-progress[data-progress-text="72%"]:after { right: -6.608vw }
-.pace pace-progress[data-progress-text="73%"]:after { right: -6.422vw }
-.pace pace-progress[data-progress-text="74%"]:after { right: -6.236vw }
-.pace pace-progress[data-progress-text="75%"]:after { right: -6.05vw }
-.pace pace-progress[data-progress-text="76%"]:after { right: -5.864vw }
-.pace pace-progress[data-progress-text="77%"]:after { right: -5.678vw }
-.pace pace-progress[data-progress-text="78%"]:after { right: -5.492vw }
-.pace pace-progress[data-progress-text="79%"]:after { right: -5.306vw }
-.pace pace-progress[data-progress-text="80%"]:after { right: -5.12vw }
-.pace pace-progress[data-progress-text="81%"]:after { right: -4.934vw }
-.pace pace-progress[data-progress-text="82%"]:after { right: -4.7480000000000004vw }
-.pace pace-progress[data-progress-text="83%"]:after { right: -4.562vw }
-.pace pace-progress[data-progress-text="84%"]:after { right: -4.376vw }
-.pace pace-progress[data-progress-text="85%"]:after { right: -4.19vw }
-.pace pace-progress[data-progress-text="86%"]:after { right: -4.004vw }
-.pace pace-progress[data-progress-text="87%"]:after { right: -3.818vw }
-.pace pace-progress[data-progress-text="88%"]:after { right: -3.632vw }
-.pace pace-progress[data-progress-text="89%"]:after { right: -3.446vw }
-.pace pace-progress[data-progress-text="90%"]:after { right: -3.26vw }
-.pace pace-progress[data-progress-text="91%"]:after { right: -3.0740000000000002vw }
-.pace pace-progress[data-progress-text="92%"]:after { right: -2.8880000000000003vw }
-.pace pace-progress[data-progress-text="93%"]:after { right: -2.702vw }
-.pace pace-progress[data-progress-text="94%"]:after { right: -2.516vw }
-.pace pace-progress[data-progress-text="95%"]:after { right: -2.33vw }
-.pace pace-progress[data-progress-text="96%"]:after { right: -2.1439999999999998vw }
-.pace pace-progress[data-progress-text="97%"]:after { right: -1.958vw }
-.pace pace-progress[data-progress-text="98%"]:after { right: -1.772vw }
-.pace pace-progress[data-progress-text="99%"]:after { right: -1.586vw }
-.pace pace-progress[data-progress-text="100%"]:after { right: -1.4vw }
-
-
-.pace .pace-activity {
-	position: absolute;
+	height: 100%;
 	width: 100%;
-	height: 2.8vw;
-	z-index: 2001;
-	box-shadow: inset 0 0 0 0.2vw #ffc72e, inset 0 0 0 0.7vw #FFF;
-	border-radius: 1.0vw;
-}
+	background: #49b1f5;
+	background: linear-gradient(
+	  to right,
+	  rgb(18, 194, 233),
+	  rgb(196, 113, 237),
+	  rgb(246, 79, 89)
+	);
+	animation: gradient 2s ease infinite;
+	background-size: 200%;
+  }
 
-.pace.pace-inactive {
-	display: none;
+#nav-right {
+	flex: 1 1 auto;
+	justify-content: flex-end;
+	margin-left: auto;
+	display: flex;
+	flex-wrap: nowrap;
 }
