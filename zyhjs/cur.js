@@ -3,7 +3,7 @@
 	  defaults = {
 	  	deg1: 2,
 	  	len1: 7,
-		showTime: 10, //绘制的线条显示的时间 drawType为1时生效
+		showTime: 14, //绘制的线条显示的时间 drawType为1时生效
 		multi: 1.5,//放大倍率
 		multiDom: null,//需要放大的dom节点对象
 		border: null
@@ -121,7 +121,7 @@
 					}
 					// 绘制
 					function draw() {
-						deg-=0.37431;
+						deg-=0.67431;
 						if(deg<3.1415926)deg+=6.2831852;
 						loop++;
 						if (loop == 5) {
