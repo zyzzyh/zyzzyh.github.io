@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>nfls做题细节</title>
+      <link href="/2024/09/30/nfls%E5%81%9A%E9%A2%98%E7%BB%86%E8%8A%82/"/>
+      <url>/2024/09/30/nfls%E5%81%9A%E9%A2%98%E7%BB%86%E8%8A%82/</url>
+      
+        <content type="html"><![CDATA[<p>这几天在 nflsoj 上做题，其中有来源广泛的题。虽然是原题，但搬题人对于大多数题目都总结了形式化题意，且自造了数据。数据虽然有些很水，但也有些十分用心，时限的设置也是否用心。于是有了这篇文章，记录我做题时遇到的细节。</p><h3 id="常数类"><a href="#常数类" class="headerlink" title="常数类"></a>常数类</h3><ol><li>倍增数组要写成 <code>arry[__lg(N)+1][N]</code> 的形式，而不是 <code>arry[N][__lg(N)+1]</code> 。前面的写法可以有效减少指针移动距离，减少常数。是的，有道题我因为这个被卡常了。</li><li>使用扩大后会定期重构的 hash 容器时查询使用 <code>.find()</code> 函数而不是使用<code>[]</code>运算符。后者无论 hash 表中是否存在这个元素都会插入这个元素。</li></ol><h3 id="正确性类"><a href="#正确性类" class="headerlink" title="正确性类"></a>正确性类</h3><ol><li>注意搞清 dfn 序和编号，题目大多求满足同样限制下编号最小而不是 dfn 序最小。</li></ol>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> oi </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>题解：P5619_[DBOI2019]__持矢</title>
       <link href="/2024/09/20/%E9%A2%98%E8%A7%A3%EF%BC%9AP5619%20%5BDBOI2019%5D%20%E6%8C%81%E7%9F%A2/"/>
       <url>/2024/09/20/%E9%A2%98%E8%A7%A3%EF%BC%9AP5619%20%5BDBOI2019%5D%20%E6%8C%81%E7%9F%A2/</url>
