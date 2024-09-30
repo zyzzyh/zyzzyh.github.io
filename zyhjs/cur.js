@@ -3,7 +3,7 @@
 	  defaults = {
 	  	deg1: 2,
 	  	len1: 7,
-		showTime: 14, //绘制的线条显示的时间 drawType为1时生效
+		showTime: 12, //绘制的线条显示的时间 drawType为1时生效
 		multi: 1.5,//放大倍率
 		multiDom: null,//需要放大的dom节点对象
 		border: null
@@ -82,6 +82,9 @@
 					let bodyLength = $$this.options.showTime;
 					let deg = $$this.options.deg1;
 					let len = $$this.options.len1;
+					let lstx=mouse_pos_x;
+					let lsty=mouse_pos_y;
+					let tmp=1;
 					document.body.addEventListener('mousemove', mouse_track);
 
 					function mouse_track(event) {
@@ -135,8 +138,12 @@
 							body[i].x = body[i - 1].x;
 							body[i].y = body[i - 1].y;
 						}
-						body[0].x = mouse_pos_x+len*Math.sin(deg);
-						body[0].y = mouse_pos_y+len*Math.cos(deg);
+						if(Math.abs(mouse_pos_x-lstx)>=delta||Math.abs(mouse_pos_y-lsty)>=delta)tmp=0;
+						else tmp=1;
+						lstx=mouse_pos_x;
+						lsty=mouse_pos_y;
+						body[0].x = mouse_pos_x+len*Math.sin(deg)*tmp;
+						body[0].y = mouse_pos_y+len*Math.cos(deg)*tmp;
 						ctx.lineWidth = line;
 						ctx.strokeStyle = "rgb(" + red[step] + "," + grn[step] + "," + blu[step] + ")";
 						ctx.fillStyle = "rgb(" + red[step] + "," + grn[step] + "," + blu[step] + ")";
