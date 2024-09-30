@@ -124,7 +124,7 @@
 					}
 					// 绘制
 					function draw() {
-						deg-=0.67431;
+						deg-=0.37431;
 						if(deg<3.1415926)deg+=6.2831852;
 						loop++;
 						if (loop == 5) {
