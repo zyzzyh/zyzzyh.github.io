@@ -1,3 +1,7 @@
+var script = document.createElement('script');
+script.src = '/pluginsSrc/node-snackbar/dist/snackbar.min.js?v=0.1.16';
+document.body.appendChild(script);
+
 var url = window.location.pathname;
 if(document.getElementsByTagName('html')[0].getAttribute('data-darkreader-scheme') == 'dark')
 {
