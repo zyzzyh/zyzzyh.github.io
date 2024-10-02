@@ -1,11 +1,1 @@
-/*指针样式*/
-body {
-    cursor: url(/img/cur.cur),
-        default;
-}
-/*链接小手样式*/
-a,
-img {
-    cursor: url(/img/selection.cur),
-        default;
-}
+body{cursor:url(/img/cur.cur),default}a,img{cursor:url(/img/selection.cur),default}

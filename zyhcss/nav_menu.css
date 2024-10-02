@@ -1,15 +1,1 @@
-/* 导航栏做居中处理 */
-/* 一级菜单居中 */
-#menus .menus_items {
-/* display: inline; 这个带不带都可以，本来就是inline */
-    position: absolute;
-    width: fit-content;
-    left: 50%;
-    transform: translateX(-50%);
-}
-/* 导航栏菜单鼠标移入字体放大 */
-#menus #site-name:hover, 
-#menus .menus_item:hover, 
-#menus #search-button:hover{
-    font-size:28px;
-}
+#menus .menus_items{position:absolute;width:fit-content;left:50%;transform:translateX(-50%)}#menus #search-button:hover,#menus #site-name:hover,#menus .menus_item:hover{font-size:28px}
