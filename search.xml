@@ -8,7 +8,7 @@
       <link href="/2024/10/03/little_nightmares/"/>
       <url>/2024/10/03/little_nightmares/</url>
       
-        <content type="html"><![CDATA[<p>开始玩一代了。很早之前就开始关注这个游戏，但关注得不多，只是偶尔看到有关的东西。后来听说出二代了，还听说二代刚出的时候一代免费送，可惜我知道的时候已经结束了。不过现在玩上一代了。</p><p>下载挺快的， 10 几 G 感觉不到2 分钟就下完了。但打开后有个小插曲，窗口切出去以后再切回来窗口会闪退。后来把分辨率调成 $2560\times 1440$ 就好了。</p>]]></content>
+        <content type="html"><![CDATA[<p>开始玩一代了。很早之前就开始关注这个游戏，但关注得不多，只是偶尔看到有关的东西。后来听说出二代了，还听说二代刚出的时候一代免费送，可惜我知道的时候已经结束了。不过现在玩上一代了。</p><p>下载挺快的， 10 几 G 感觉不到2 分钟就下完了。但打开后有个小插曲，窗口切出去以后再切回来窗口会闪退。后来在游戏内把分辨率调成 $2560\times 1440$ ，再把全屏去掉就好了。</p>]]></content>
       
       
       <categories>
@@ -140,7 +140,7 @@
       <link href="/2024/09/13/tips/"/>
       <url>/2024/09/13/tips/</url>
       
-        <content type="html"><![CDATA[<p>如果 mathjax 不能正常显示 <code>ctrl+F5</code> 刷新。</p><p><a href="/zyh/url">url</a></p>]]></content>
+        <content type="html"><![CDATA[<p>如果 mathjax 不能正常显示 q<code>ctrl+F5</code> 刷新。</p><p>右键或将页面向下滑动一小段后点击右下角设置切换昼夜模式。</p><p>如果 mathjax 不显示请等待页面完全加载，还不行的话 <code>ctrl+F5</code> 刷新。</p><p><a href="/zyh/url">url</a></p>]]></content>
       
       
       
