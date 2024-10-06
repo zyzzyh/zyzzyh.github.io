@@ -1,1 +1,1 @@
-[data-theme=dark] .magnet_link_context{color:#fff}.magnet_item{overflow:hidden;border-radius:100%;border:2px solid #fff}.magnet_link{border-radius:100%}#recent-posts>.recent-post-item:has(#catalog_magnet){overflow:visible}
+[data-theme=dark] .magnet_link_context{color:#fff}.magnet_item{overflow:hidden;border-radius:100%;border:2px solid #fff}.magnet_link{border-radius:100%}#recent-posts>.recent-post-item:has(#catalog_magnet){border-radius:20px;border:2px solid #ff9300}

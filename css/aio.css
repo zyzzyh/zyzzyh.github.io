@@ -5,6 +5,79 @@ body{cursor:url(/img/cur.cur),default}a,img{cursor:url(/img/selection.cur),defau
 
 #menus .menus_items{position:absolute;width:fit-content;left:50%;transform:translateX(-50%)}#menus #search-button:hover,#menus #site-name:hover,#menus .menus_item:hover{font-size:28px}#page-header.nav-visible #nav{backdrop-filter:blur(10px)}
 #universe{display:block;position:fixed;margin:0;padding:0;border:0;outline:0;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:-1}
-#recent-posts{margin-top:-1rem;align-content:flex-start;display:flex;flex-wrap:wrap;justify-content:space-between}#recent-posts>.recent-post-item{margin-top:1rem;display:inline-block;height:auto;width:49%;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column}#recent-posts>.recent-post-item .post_cover{width:100%;height:200px}#recent-posts>.recent-post-item .post_cover img.post_bg{width:100%;height:100%}#recent-posts>.recent-post-item>.recent-post-info>.content{display:none}#recent-posts>.recent-post-item .left_radius,#recent-posts>.recent-post-item .right_radius{border-radius:8px 8px 0 0}.recent-post-item{height:auto!important}.recent-post-info{padding:0 40px;margin-top:1em;width:100%!important}#recent-posts>.recent-post-item>.recent-post-info>.article-title{-webkit-line-clamp:1;margin-top:.3rem;margin-bottom:.3rem;color:var(--text-highlight-color);font-size:1.2em;line-height:1.4}#recent-posts>.recent-post-item>.recent-post-info>.article-meta-wrap{margin-bottom:1rem}@media screen and (max-width:768px){#recent-posts>.recent-post-item{width:100%}#recent-posts>.recent-post-item>.recent-post-info>.article-meta-wrap>.tags:before{content:"\\A";white-space:pre}#recent-posts>.recent-post-item>.recent-post-info>.article-meta-wrap>.tags>.article-meta__separator{display:none}}
-[data-theme=dark] .magnet_link_context{color:#fff}.magnet_item{overflow:hidden;border-radius:100%;border:2px solid #fff}.magnet_link{border-radius:100%}#recent-posts>.recent-post-item:has(#catalog_magnet){overflow:visible}
+@media screen(min-width: 1100px)
+{
+      #recent-posts{
+        margin-top:-1rem;  /*头部为空时抵消间隔，若有磁贴或日历请注释掉该行*/
+        align-content:flex-start;
+        display: flex;
+          flex-wrap: wrap; /*规定灵活的项目在必要的时候拆行或拆列。*/
+          justify-content: space-between; /*。*/
+      }
+      #recent-posts > .recent-post-item {
+        /*max-height:324px;*/  /*文章容器最大高度*/
+        margin-top: 1rem; /*最小间距*/
+        display: inline-block;
+        height:auto; /*高度自动*/
+        width:49%;/*文章容器容器宽度*/
+      }
+      #recent-posts > .recent-post-item .post_cover {
+        width: 100%; /*图片封面宽度*/
+          height: 200px;/*图片封面高度*/
+      }
+      #recent-posts > .recent-post-item .post_cover img.post_bg {
+        width: 100%;/*图片宽度*/
+        height: 100%;/*图片高度*/
+      }
+
+
+      #recent-posts > .recent-post-item >.recent-post-info > .content {
+      display:none;/*隐藏文章详情*/
+      }
+      #recent-posts > .recent-post-item {
+
+        -webkit-flex-direction: column; /*容器内部纵向排列*/
+        -ms-flex-direction: column; /*容器内部纵向排列*/
+        flex-direction: column; /*容器内部纵向排列*/
+
+      }
+      #recent-posts > .recent-post-item .left_radius {
+          border-radius: 8px 8px 0 0;/*圆角修改*/
+      }
+      #recent-posts > .recent-post-item .right_radius {
+          border-radius: 8px 8px 0 0;/*圆角修改*/
+      }
+      .recent-post-item{
+        height:auto !important;/*容器高度自动*/
+      }
+
+      .recent-post-info {
+        
+        padding: 0 40px;/*容器内部文字左右间距*/
+        margin-top: 1em;/*容器内部文字上间距*/
+        width: 100%!important;/*容器宽度*/
+      }
+      #recent-posts > .recent-post-item > .recent-post-info > .article-title {
+          -webkit-line-clamp: 1;/*控制标题的行数*/
+          margin-top: 0.3rem; /*控制标题的上间距*/
+        margin-bottom: 0.3rem;/*控制标题的下间距*/
+          color: var(--text-highlight-color);
+          font-size: 1.2em; /*控制标题的字体大小*/
+          line-height: 1.4;/*控制标题的行高*/
+       
+      }
+      #recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap {
+        margin-bottom: 1rem;/*控制标题meta信息的底部间距*/
+      }
+      @media screen and (max-width: 768px) {
+      #recent-posts > .recent-post-item {
+       width:100%;/*控制手机自适应*/
+      }
+    }
+
+
+      #recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags:before {content:"\\A";white-space: pre;}#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags > .article-meta__separator{display:none}
+}
+[data-theme=dark] .magnet_link_context{color:#fff}.magnet_item{overflow:hidden;border-radius:100%;border:2px solid #fff}.magnet_link{border-radius:100%}#recent-posts>.recent-post-item:has(#catalog_magnet){border-radius:20px;border:2px solid #ff9300}
 #footer,.layout_post>#post{box-shadow:5px 7px 11px 0 rgba(0,0,0,.65)}.layout_post>#post{background:rgba(255,255,255,.65)}#footer{background:rgba(255,255,255,0)}#archive， .magnet_item,#page,#post,#recent-posts>.recent-post-item,.layout_page>div:first-child:not(.recent-posts),.layout_post>#page,.layout_post>#post,.read-mode .layout_post>#post{background:rgba(255,255,255,.7);box-shadow:0 0 0 0 rgba(255,255,255,.9),.4px .4px .3px rgba(0,0,0,.073),1px 1px .7px rgba(0,0,0,.105),1.9px 1.9px 1.3px rgba(0,0,0,.18),3.4px 3.4px 2.2px rgba(0,0,0,.305),6.3px 6.3px 4.2px rgba(0,0,0,.437),15px 15px 10px rgba(0,0,0,.26);border-radius:65px;border:2px solid #ffd000}#recent-posts>.recent-post-item:hover,.magnet_item:hover{background:rgba(255,255,255,.8);box-shadow:0 0 0 0 rgba(0,0,0,0);border:2px solid #8900eb}#aside-content .card-widget{background:rgba(255,255,255,.4);box-shadow:7px 9px 11px 0 rgba(0,0,0,.65);border-radius:50px;border:2px solid #00ffe6}#aside-content .card-widget:hover{border:2px solid #8900eb}[data-theme=dark] #archive,[data-theme=dark] #aside-content .card-widget,[data-theme=dark] #page,[data-theme=dark] #post,[data-theme=dark] #recent-posts>.recent-post-item,[data-theme=dark] .layout_page>div:first-child:not(.recent-posts),[data-theme=dark] .layout_post>#page,[data-theme=dark] .layout_post>#post,[data-theme=dark] .magnet_item,[data-theme=dark] .read-mode .layout_post>#post{background:rgba(0,0,0,.65);box-shadow:0 0 0 0 rgba(255,255,255,.1),.4px .4px .3px rgba(0,0,0,.149),1px 1px .7px rgba(0,0,0,.214),1.9px 1.9px 1.3px rgba(0,0,0,.265),3.4px 3.4px 2.2px rgba(0,0,0,.316),6.3px 6.3px 4.2px rgba(0,0,0,.481),15px 15px 10px rgba(0,0,0,.53)}[data-theme=dark] :root{--card-bg:rgba(0, 0, 0, .5);box-shadow:5px 7px 11px 0 rgba(0,0,0,.65)}[data-theme=dark] #footer{background:rgba(0,0,0,.8);box-shadow:5px 7px 11px 0 rgba(0,0,0,.65)}[data-theme=dark] #recent-posts>.recent-post-item:hover,[data-theme=dark] .magnet_item:hover{box-shadow:0 0 0 0 rgba(255,255,255,.1);border:2px solid #8900eb}[data-theme=dark] #aside-content .card-widget{background:rgba(0,0,0,.4);box-shadow:7px 9px 11px 0 rgba(0,0,0,.65);border-radius:50px;border:2px solid #00ffe6}[data-theme=dark] #aside-content .card-widget:hover{box-shadow:0 0 0 0 rgba(0,0,0,.65);border:2px solid #8900eb}
+#post-info{text-align:center;bottom:100px}
