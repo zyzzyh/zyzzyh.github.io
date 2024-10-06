@@ -1,1 +1,1 @@
-#menus .menus_items{position:absolute;width:fit-content;left:50%;transform:translateX(-50%)}#menus #search-button:hover,#menus #site-name:hover,#menus .menus_item:hover{font-size:28px}
+#menus .menus_items{position:absolute;width:fit-content;left:50%;transform:translateX(-50%)}#menus #search-button:hover,#menus #site-name:hover,#menus .menus_item:hover{font-size:28px}#page-header.nav-visible #nav{backdrop-filter:blur(10px)}
