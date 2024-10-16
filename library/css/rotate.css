@@ -7,7 +7,7 @@
   }  
 }  
 .recent-post-item,
-.aside-content > *,
+.aside-content > *:not(.sticky_layout),
 #post> *,
 #archive>*,
 #tags>*,
