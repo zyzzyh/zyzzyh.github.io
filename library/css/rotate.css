@@ -11,7 +11,7 @@
 #post> *,
 #archive>*,
 #tags>*,
-#categories>*
+#categories>*,
 .sticky_layout>*
 {
 	  animation: spin 2s linear infinite;  
