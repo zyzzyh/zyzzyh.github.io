@@ -8,7 +8,11 @@
 }  
 .recent-post-item,
 .aside-content > *,
-.layout :nth-child(1) > *
+#post> *,
+#archive>*,
+#tags>*,
+#categories>*
+.sticky_layout>*
 {
 	  animation: spin 2s linear infinite;  
 }
