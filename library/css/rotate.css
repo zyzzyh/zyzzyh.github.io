@@ -8,7 +8,6 @@
 }  
 .recent-post-item,
 .aside-content > *,
-#post>*,
 .layout :nth-child(1) > *
 {
 	  animation: spin 2s linear infinite;  
