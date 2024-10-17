@@ -12,7 +12,9 @@
 #archive>*,
 #tags>*,
 #categories>*,
-.sticky_layout>*
+.sticky_layout>*,
+#menus>*,
+#rightMenu>*
 {
 	  animation: spin 2s linear infinite;  
 }
