@@ -1,0 +1,20 @@
+@keyframes spin{  
+  from {  
+    transform: rotate(0deg);  
+  }  
+  to {  
+    transform: rotate(360deg);  
+  }  
+}  
+.recent-post-item,
+.aside-content > *:not(.sticky_layout),
+#post> *,
+#archive>*,
+#tags>*,
+#categories>*,
+.sticky_layout>*,
+#menus>*,
+#rightMenu>*
+{
+	  animation: spin 2s linear infinite;  
+}
