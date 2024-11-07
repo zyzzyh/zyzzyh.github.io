@@ -11,7 +11,9 @@ var observer = new IntersectionObserver(
   function(changes) {
     changes.forEach(function(change) {
     	let b=baffle(change.target);
+      b.start();
     	b.reveal(1000);
+
       // var container = change.target;
       // var content = container.querySelector('template').content;
       // container.appendChild(content);
