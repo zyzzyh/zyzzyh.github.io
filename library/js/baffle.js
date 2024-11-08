@@ -13,7 +13,7 @@ var observer = new IntersectionObserver(
     changes.forEach(function(change) {
       if(!S.has(change.target))
       {
-      	let b=baffle(change.target,{characters: '!@#~$%*/.█▓▒░'});
+      	let b=baffle(change.target,{characters: '/@#~$%█▓▒░'});
         b.start();
       	b.reveal(1900);
         S.add(change.target)
