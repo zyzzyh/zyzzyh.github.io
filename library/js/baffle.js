@@ -15,11 +15,11 @@ var observer = new IntersectionObserver(
       {
       	let b=baffle(change.target,{characters: '!@#~$%*/.█▓▒░'});
         b.start();
-      	b.reveal(1700);
+      	b.reveal(1900);
         S.add(change.target)
         setTimeout(() => {
           S.delete(change.target)
-        }, 1800);
+        }, 2000);
         // var container = change.target;
         // var content = container.querySelector('template').content;
         // container.appendChild(content);
