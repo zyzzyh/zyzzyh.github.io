@@ -13,13 +13,13 @@ var observer = new IntersectionObserver(
     changes.forEach(function(change) {
       if(!S.has(change.target))
       {
-      	let b=baffle(change.target);
+      	let b=baffle(change.target,{characters: '!@#~$%*(){}[]:"/.'});
         b.start();
-      	b.reveal(1000);
+      	b.reveal(600);
         S.add(change.target)
         setTimeout(() => {
           S.delete(change.target)
-        }, 1000);
+        }, 700);
         // var container = change.target;
         // var content = container.querySelector('template').content;
         // container.appendChild(content);
