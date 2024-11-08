@@ -14,7 +14,7 @@ var observer = new IntersectionObserver(
       if(!S.has(change.target))
       {
         S.add(change.target)
-      	let b=baffle(change.target,{characters: '/@#~$%█▓▒░'});
+      	let b=baffle(change.target,{characters: '/@#~$%█▓▒░',speed: 150});
         b.start();
       	b.reveal(1900);
         setTimeout(() => {
