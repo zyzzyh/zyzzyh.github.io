@@ -32,3 +32,21 @@ var observer = new IntersectionObserver(
 Array.from(document.querySelectorAll('.article-title')).forEach(function (item) {
   observer.observe(item);
 });
+Array.from(document.getElementsByTagName("h1")).forEach(function (item) {
+  observer.observe(item);
+});
+Array.from(document.getElementsByTagName("h2")).forEach(function (item) {
+  observer.observe(item);
+});
+Array.from(document.getElementsByTagName("h3")).forEach(function (item) {
+  observer.observe(item);
+});
+Array.from(document.getElementsByTagName("h4")).forEach(function (item) {
+  observer.observe(item);
+});
+Array.from(document.getElementsByTagName("h5")).forEach(function (item) {
+  observer.observe(item);
+});
+Array.from(document.getElementsByTagName("h6")).forEach(function (item) {
+  observer.observe(item);
+});
