@@ -14,12 +14,12 @@ var observer = new IntersectionObserver(
       if(!S.has(change.target))
       {
         S.add(change.target)
-      	let b=baffle(change.target,{characters: '/@#~$%█▓▒░',speed: 150});
+      	let b=baffle(change.target,{characters: '/@#~$%█▓▒░',speed: 50});
         b.start();
-      	b.reveal(1900);
         setTimeout(() => {
           S.delete(change.target)
-        }, 2100);
+        b.reveal();
+        }, 1500);
         // var container = change.target;
         // var content = container.querySelector('template').content;
         // container.appendChild(content);
