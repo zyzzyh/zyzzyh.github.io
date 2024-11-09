@@ -150,6 +150,31 @@
     
     
     <entry>
+      <title>AC_自动机不学笔记</title>
+      <link href="/2024/10/09/oi/acautomaton/"/>
+      <url>/2024/10/09/oi/acautomaton/</url>
+      
+        <content type="html"><![CDATA[<p>AC 自动机，一种自动机，用于多模字符串匹配。</p><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>现在已经对于要匹配的很多很多很多字符串建好了AC 自动机，然后有<strong>一个</strong>很长很长的串需要正在匹配。</p><p>先送你一个指针 $p$，这个指针在 trie 树上游走，再设考虑到了正在匹配串的第 $i$ 位，那么 $p$ 到 trie 树根节点所代表的字符串就是当前匹配串从 $i$ 位向前最大前缀，这里最大的意思是 trie 树上其他能匹配的串相比长度是最大的。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> oi </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> oi </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>little_nightmares</title>
       <link href="/2024/10/03/game/little_nightmares/"/>
       <url>/2024/10/03/game/little_nightmares/</url>
