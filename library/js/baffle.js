@@ -29,6 +29,6 @@ var observer = new IntersectionObserver(
   }
 );
 
-Array.from(document.querySelectorAll('.article-title','#article-container > h1','#article-container > h2','#article-container > h3','#article-container > h4','#article-container > h5','#article-container > h6')).forEach(function (item) {
+Array.from(document.querySelectorAll("article-title,#article-container > h1,#article-container > h2,#article-container > h3,#article-container > h4,#article-container > h5,#article-container > h6")).forEach(function (item) {
   observer.observe(item);
 });
