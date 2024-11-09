@@ -29,24 +29,6 @@ var observer = new IntersectionObserver(
   }
 );
 
-Array.from(document.querySelectorAll('.article-title')).forEach(function (item) {
-  observer.observe(item);
-});
-Array.from(document.getElementsByTagName("h1")).forEach(function (item) {
-  observer.observe(item);
-});
-Array.from(document.getElementsByTagName("h2")).forEach(function (item) {
-  observer.observe(item);
-});
-Array.from(document.getElementsByTagName("h3")).forEach(function (item) {
-  observer.observe(item);
-});
-Array.from(document.getElementsByTagName("h4")).forEach(function (item) {
-  observer.observe(item);
-});
-Array.from(document.getElementsByTagName("h5")).forEach(function (item) {
-  observer.observe(item);
-});
-Array.from(document.getElementsByTagName("h6")).forEach(function (item) {
+Array.from(document.querySelectorAll('.article-title','#article-container > h1','#article-container > h2','#article-container > h3','#article-container > h4','#article-container > h5','#article-container > h6')).forEach(function (item) {
   observer.observe(item);
 });
