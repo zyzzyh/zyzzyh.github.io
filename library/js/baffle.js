@@ -19,7 +19,7 @@ var observer = new IntersectionObserver(
         setTimeout(() => {
           S.delete(change.target)
         b.reveal();
-        }, 1500);
+        }, 900);
         // var container = change.target;
         // var content = container.querySelector('template').content;
         // container.appendChild(content);
