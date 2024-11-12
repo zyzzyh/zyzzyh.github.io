@@ -21,8 +21,7 @@ var observer = new IntersectionObserver(
           b.reveal(100);
           setTimeout(() => {
             S.delete(change.target)
-          b.reveal();
-          }, 200);
+          }, 150);
 
         }, 750);
         // var container = change.target;
