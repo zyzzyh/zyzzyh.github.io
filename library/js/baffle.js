@@ -18,7 +18,9 @@ var observer = new IntersectionObserver(
         b.start();
           setTimeout(() => {
             b.reveal();
+            setTimeout(() => {
             S.delete(change.target)
+            },100)
           }, Math.round(500+Math.random()*400));
         // var container = change.target;
         // var content = container.querySelector('template').content;
