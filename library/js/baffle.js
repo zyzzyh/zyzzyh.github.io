@@ -16,10 +16,10 @@ var observer = new IntersectionObserver(
         S.add(change.target)
       	let b=baffle(change.target,{characters: '/@#~$%█▓▒░',speed: 50});
         b.start();
-        setTimeout(() => {
-          S.delete(change.target)
-          b.reveal();
-        }, Math.round(500+Math.random()*400));
+          setTimeout(() => {
+            b.reveal();
+            S.delete(change.target)
+          }, Math.round(500+Math.random()*400));
         // var container = change.target;
         // var content = container.querySelector('template').content;
         // container.appendChild(content);
