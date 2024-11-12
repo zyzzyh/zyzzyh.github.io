@@ -17,9 +17,14 @@ var observer = new IntersectionObserver(
       	let b=baffle(change.target,{characters: '/@#~$%█▓▒░',speed: 50});
         b.start();
         setTimeout(() => {
-          S.delete(change.target)
-        b.reveal();
-        }, 900);
+
+          b.reveal(100);
+          setTimeout(() => {
+            S.delete(change.target)
+          b.reveal();
+          }, 200);
+
+        }, 750);
         // var container = change.target;
         // var content = container.querySelector('template').content;
         // container.appendChild(content);
