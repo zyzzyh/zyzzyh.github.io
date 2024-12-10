@@ -21,7 +21,7 @@ var observer = new IntersectionObserver(
             setTimeout(() => {
             S.delete(change.target)
             },100)
-          }, Math.round(500+Math.random()*400));
+          }, Math.round(350+Math.random()*300));
         // var container = change.target;
         // var content = container.querySelector('template').content;
         // container.appendChild(content);
