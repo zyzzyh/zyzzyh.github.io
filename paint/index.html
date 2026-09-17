@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="一个轻量、可直接部署到 GitHub Pages 的网页绘画工具。"
+    />
+    <title>Paint</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="toolbar" aria-label="绘画工具栏">
+        <div class="brand" aria-label="Paint">
+          <span class="brand-mark" aria-hidden="true">P</span>
+          <span class="brand-name">Paint</span>
+        </div>
+
+        <div class="toolbar-section tool-selector" role="group" aria-label="工具">
+          <button
+            class="tool-button is-active"
+            id="brushTool"
+            type="button"
+            data-tool="brush"
+            aria-pressed="true"
+            title="画笔 (B)"
+          >
+            画笔
+          </button>
+          <button
+            class="tool-button"
+            id="eraserTool"
+            type="button"
+            data-tool="eraser"
+            aria-pressed="false"
+            title="橡皮擦 (E)"
+          >
+            橡皮
+          </button>
+        </div>
+
+        <div class="toolbar-section color-tools" aria-label="颜色">
+          <div class="swatches" id="swatches">
+            <button
+              class="swatch is-active"
+              type="button"
+              data-color="#1f2622"
+              style="--swatch: #1f2622"
+              aria-label="深墨色"
+              title="深墨色"
+            ></button>
+            <button
+              class="swatch"
+              type="button"
+              data-color="#d94a3a"
+              style="--swatch: #d94a3a"
+              aria-label="红色"
+              title="红色"
+            ></button>
+            <button
+              class="swatch"
+              type="button"
+              data-color="#e39b2d"
+              style="--swatch: #e39b2d"
+              aria-label="橙色"
+              title="橙色"
+            ></button>
+            <button
+              class="swatch"
+              type="button"
+              data-color="#3d8f68"
+              style="--swatch: #3d8f68"
+              aria-label="绿色"
+              title="绿色"
+            ></button>
+            <button
+              class="swatch"
+              type="button"
+              data-color="#3281b8"
+              style="--swatch: #3281b8"
+              aria-label="蓝色"
+              title="蓝色"
+            ></button>
+            <button
+              class="swatch"
+              type="button"
+              data-color="#7b5bb6"
+              style="--swatch: #7b5bb6"
+              aria-label="紫色"
+              title="紫色"
+            ></button>
+          </div>
+
+          <label class="color-picker" title="自定义颜色">
+            <span>颜色</span>
+            <input id="colorPicker" type="color" value="#1f2622" />
+          </label>
+        </div>
+
+        <label class="size-control" for="brushSize">
+          <span>粗细</span>
+          <input
+            id="brushSize"
+            type="range"
+            min="1"
+            max="64"
+            value="7"
+            step="1"
+          />
+          <output id="sizeOutput" for="brushSize">7</output>
+        </label>
+
+        <div class="toolbar-section action-tools" role="group" aria-label="编辑">
+          <button
+            class="icon-button"
+            id="undoButton"
+            type="button"
+            title="撤销 (Ctrl/Cmd + Z)"
+            aria-label="撤销"
+            disabled
+          >
+            <span aria-hidden="true">↶</span>
+          </button>
+          <button
+            class="icon-button"
+            id="redoButton"
+            type="button"
+            title="重做 (Ctrl/Cmd + Shift + Z)"
+            aria-label="重做"
+            disabled
+          >
+            <span aria-hidden="true">↷</span>
+          </button>
+          <button class="text-button danger-button" id="clearButton" type="button">
+            清空
+          </button>
+          <button class="text-button network-button" id="networkButton" type="button">
+            <span class="network-dot" aria-hidden="true"></span>
+            <span id="networkButtonText">联机</span>
+          </button>
+          <button class="text-button primary-button" id="saveButton" type="button">
+            导出 PNG
+          </button>
+        </div>
+      </header>
+
+      <main class="workspace" id="workspace">
+        <div class="canvas-frame" id="canvasFrame">
+          <canvas id="paintCanvas" aria-label="绘画画布">
+            你的浏览器需要支持 Canvas。
+          </canvas>
+          <div class="brush-cursor" id="brushCursor" aria-hidden="true"></div>
+          <span class="canvas-size">1600 × 1000</span>
+        </div>
+      </main>
+
+      <footer class="statusbar">
+        <span id="statusText">画笔 · 7 px</span>
+        <div class="statusbar-actions">
+          <span class="network-status" id="networkStatus" data-state="idle">
+            <span class="network-dot" aria-hidden="true"></span>
+            <span id="networkStatusText">未连接</span>
+          </span>
+          <span id="historyText">0 笔</span>
+        </div>
+      </footer>
+    </div>
+
+    <dialog class="network-dialog" id="networkDialog">
+      <div class="dialog-header">
+        <div>
+          <h2>联机绘画</h2>
+          <span class="dialog-status" id="dialogStatus" data-state="idle">
+            <span class="network-dot" aria-hidden="true"></span>
+            <span id="dialogStatusText">未连接</span>
+          </span>
+        </div>
+        <button
+          class="dialog-close"
+          id="closeNetworkDialog"
+          type="button"
+          aria-label="关闭"
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="network-tabs" role="tablist" aria-label="联机方式">
+        <button
+          class="network-tab is-active"
+          id="hostTab"
+          type="button"
+          role="tab"
+          aria-selected="true"
+          aria-controls="hostPanel"
+        >
+          创建房间
+        </button>
+        <button
+          class="network-tab"
+          id="joinTab"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="joinPanel"
+        >
+          加入房间
+        </button>
+      </div>
+
+      <section class="network-panel" id="hostPanel" role="tabpanel">
+        <button
+          class="text-button primary-button full-button"
+          id="createOfferButton"
+          type="button"
+        >
+          创建邀请
+        </button>
+
+        <div class="signal-field" id="offerField" hidden>
+          <label for="offerOutput">邀请码</label>
+          <textarea id="offerOutput" rows="5" readonly></textarea>
+          <div class="button-row">
+            <button class="text-button" id="copyOfferButton" type="button">
+              复制邀请码
+            </button>
+            <button class="text-button" id="shareOfferButton" type="button">
+              分享邀请链接
+            </button>
+          </div>
+        </div>
+
+        <div class="signal-field">
+          <label for="answerInput">回答码</label>
+          <textarea
+            id="answerInput"
+            rows="5"
+            placeholder="粘贴对方生成的回答码"
+          ></textarea>
+          <button
+            class="text-button primary-button full-button"
+            id="submitAnswerButton"
+            type="button"
+            disabled
+          >
+            完成连接
+          </button>
+        </div>
+      </section>
+
+      <section class="network-panel" id="joinPanel" role="tabpanel" hidden>
+        <div class="signal-field">
+          <label for="offerInput">邀请码或邀请链接</label>
+          <textarea
+            id="offerInput"
+            rows="5"
+            placeholder="粘贴邀请码或邀请链接"
+          ></textarea>
+          <button
+            class="text-button primary-button full-button"
+            id="createAnswerButton"
+            type="button"
+          >
+            生成回答码
+          </button>
+        </div>
+
+        <div class="signal-field" id="answerField" hidden>
+          <label for="answerOutput">回答码</label>
+          <textarea id="answerOutput" rows="5" readonly></textarea>
+          <button class="text-button full-button" id="copyAnswerButton" type="button">
+            复制回答码
+          </button>
+        </div>
+      </section>
+
+      <div class="dialog-footer">
+        <span class="dialog-message" id="dialogMessage" role="status"></span>
+        <button class="text-button danger-button" id="disconnectButton" type="button">
+          断开连接
+        </button>
+      </div>
+    </dialog>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
