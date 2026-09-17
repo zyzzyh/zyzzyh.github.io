@@ -1,6 +1,8 @@
 const DATA_CHANNEL_LABEL = "paint";
 const MAX_CHUNK_LENGTH = 12000;
 const ICE_GATHERING_TIMEOUT = 6500;
+const RECOVERY_DELAY = 700;
+const PBKDF2_ITERATIONS = 250000;
 
 const ICE_SERVERS = [
   {
@@ -15,14 +17,7 @@ export async function encodeSignal(sdp) {
   const bytes = new TextEncoder().encode(sdp);
 
   if (typeof CompressionStream === "function") {
-    const compressedStream = new Blob([bytes])
-      .stream()
-      .pipeThrough(new CompressionStream("deflate-raw"));
-    const compressed = new Uint8Array(
-      await new Response(compressedStream).arrayBuffer(),
-    );
-
-    return `1.${bytesToBase64Url(compressed)}`;
+    return `1.${bytesToBase64Url(await compressBytes(bytes))}`;
   }
 
   return `0.${bytesToBase64Url(bytes)}`;
@@ -40,22 +35,81 @@ export async function decodeSignal(signal) {
   const payload = code.slice(separatorIndex + 1).replace(/\s/g, "");
   let bytes = base64UrlToBytes(payload);
 
-  if (version === "1") {
-    if (typeof DecompressionStream !== "function") {
-      throw new Error("当前浏览器无法读取该邀请码。");
-    }
+  if (version === "2") {
+    throw new Error("该邀请码需要密码。");
+  }
 
-    const decompressedStream = new Blob([bytes])
-      .stream()
-      .pipeThrough(new DecompressionStream("deflate-raw"));
-    bytes = new Uint8Array(
-      await new Response(decompressedStream).arrayBuffer(),
-    );
+  if (version === "1") {
+    bytes = await decompressBytes(bytes);
   } else if (version !== "0") {
     throw new Error("邀请码版本不受支持。");
   }
 
   return new TextDecoder().decode(bytes);
+}
+
+export async function encryptSignal(sdp, password) {
+  const useCompression = typeof CompressionStream === "function";
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await deriveEncryptionKey(password, salt);
+  const encoded = new TextEncoder().encode(sdp);
+  const compressed = useCompression
+    ? await compressBytes(encoded)
+    : encoded;
+  const encrypted = await crypto.subtle.encrypt(
+    {
+      name: "AES-GCM",
+      iv,
+    },
+    key,
+    compressed,
+  );
+
+  return [
+    "2",
+    useCompression ? "1" : "0",
+    bytesToBase64Url(salt),
+    bytesToBase64Url(iv),
+    bytesToBase64Url(new Uint8Array(encrypted)),
+  ].join(".");
+}
+
+export async function decryptSignal(signal, password) {
+  const code = extractInviteCode(signal);
+  const parts = code.split(".");
+
+  if (parts.length !== 5 || parts[0] !== "2") {
+    throw new Error("邀请码格式无效。");
+  }
+
+  if (!password) {
+    throw new Error("请输入密码。");
+  }
+
+  const useCompression = parts[1] === "1";
+  const salt = base64UrlToBytes(parts[2]);
+  const iv = base64UrlToBytes(parts[3]);
+  const encrypted = base64UrlToBytes(parts[4]);
+  const key = await deriveEncryptionKey(password, salt);
+
+  try {
+    const decrypted = await crypto.subtle.decrypt(
+      {
+        name: "AES-GCM",
+        iv,
+      },
+      key,
+      encrypted,
+    );
+    const decryptedBytes = new Uint8Array(decrypted);
+    const decoded = useCompression
+      ? await decompressBytes(decryptedBytes)
+      : decryptedBytes;
+    return new TextDecoder().decode(decoded);
+  } catch {
+    throw new Error("密码错误或联机信息已损坏。");
+  }
 }
 
 export function extractInviteCode(value) {
@@ -86,11 +140,13 @@ export class PaintNetwork {
     {
       onStatusChange = () => {},
       onError = () => {},
+      onChatMessage = () => {},
     } = {},
   ) {
     this.editor = editor;
     this.onStatusChange = onStatusChange;
     this.onError = onError;
+    this.onChatMessage = onChatMessage;
 
     this.peer = null;
     this.channel = null;
@@ -100,7 +156,11 @@ export class PaintNetwork {
     this.ready = false;
     this.status = "idle";
     this.closedByUser = false;
+    this.hadDisconnect = false;
+    this.recoveryTimer = 0;
+    this.sessionPassword = "";
     this.incomingChunks = new Map();
+    this.seenChatIds = new Set();
     this.chunkId = 0;
   }
 
@@ -108,8 +168,14 @@ export class PaintNetwork {
     return this.ready && this.channel?.readyState === "open";
   }
 
-  async createHostOffer() {
+  get hasSessionPassword() {
+    return this.sessionPassword.length >= 6;
+  }
+
+  async createHostOffer(password) {
+    const effectivePassword = this.resolvePassword(password);
     this.resetConnection({ keepStatus: true });
+    this.sessionPassword = effectivePassword;
     this.role = "host";
     this.setStatus("creating", "正在创建邀请");
 
@@ -128,27 +194,36 @@ export class PaintNetwork {
       throw new Error("无法生成邀请码。");
     }
 
-    const signal = await encodeSignal(peer.localDescription.sdp);
+    const signal = await encryptSignal(
+      peer.localDescription.sdp,
+      effectivePassword,
+    );
     this.setStatus("waiting", "等待回答码");
     return signal;
   }
 
-  async acceptHostAnswer(answerSignal) {
+  async acceptHostAnswer(answerSignal, password) {
     if (!this.peer || this.role !== "host") {
       throw new Error("请先创建邀请。");
     }
 
-    const sdp = await decodeSignal(answerSignal);
+    const effectivePassword = this.resolvePassword(
+      password || this.sessionPassword,
+    );
+    const sdp = await decryptSignal(answerSignal, effectivePassword);
+    this.sessionPassword = effectivePassword;
     await this.peer.setRemoteDescription({ type: "answer", sdp });
     this.setStatus("connecting", "正在建立连接");
   }
 
-  async createGuestAnswer(offerSignal) {
+  async createGuestAnswer(offerSignal, password) {
+    const effectivePassword = this.resolvePassword(password);
     this.resetConnection({ keepStatus: true });
     this.role = "guest";
     this.setStatus("connecting", "正在生成回答码");
 
-    const sdp = await decodeSignal(offerSignal);
+    const sdp = await decryptSignal(offerSignal, effectivePassword);
+    this.sessionPassword = effectivePassword;
     const peer = this.createPeerConnection();
 
     peer.addEventListener("datachannel", (event) => {
@@ -164,9 +239,22 @@ export class PaintNetwork {
       throw new Error("无法生成回答码。");
     }
 
-    const signal = await encodeSignal(peer.localDescription.sdp);
+    const signal = await encryptSignal(
+      peer.localDescription.sdp,
+      effectivePassword,
+    );
     this.setStatus("waiting", "等待房主连接");
     return signal;
+  }
+
+  resolvePassword(password) {
+    const value = String(password || this.sessionPassword || "").trim();
+
+    if (value.length < 6) {
+      throw new Error("密码至少需要 6 个字符。");
+    }
+
+    return value;
   }
 
   createInviteLink(inviteSignal) {
@@ -222,6 +310,20 @@ export class PaintNetwork {
     return true;
   }
 
+  sendChatMessage({ id, sentAt, text }) {
+    if (!this.connected) {
+      return false;
+    }
+
+    return this.sendMessage({
+      type: "chat-message",
+      id,
+      sentAt,
+      text,
+      senderRole: this.role,
+    });
+  }
+
   shareState(reason) {
     if (!this.connected) {
       return false;
@@ -249,6 +351,7 @@ export class PaintNetwork {
 
   disconnect() {
     this.closedByUser = true;
+    window.clearTimeout(this.recoveryTimer);
     this.resetConnection();
     this.setStatus("idle", "未连接");
   }
@@ -270,9 +373,17 @@ export class PaintNetwork {
       }
 
       if (peer.connectionState === "failed") {
-        this.setStatus("error", "连接失败");
+        this.hadDisconnect = true;
+        window.clearTimeout(this.recoveryTimer);
+        this.setStatus("reconnect", "需要重新连接");
       } else if (peer.connectionState === "disconnected") {
-        this.setStatus("connecting", "连接暂时中断");
+        this.hadDisconnect = true;
+        this.setStatus("reconnecting", "正在自动重连");
+      } else if (
+        peer.connectionState === "connected" &&
+        this.hadDisconnect
+      ) {
+        this.handleRecoveredConnection(peer);
       }
     });
 
@@ -281,6 +392,7 @@ export class PaintNetwork {
 
   configureChannel(channel) {
     this.channel = channel;
+    this.incomingChunks.clear();
 
     channel.addEventListener("open", () => {
       if (this.channel !== channel) {
@@ -313,7 +425,9 @@ export class PaintNetwork {
       this.ready = false;
 
       if (!this.closedByUser) {
-        this.setStatus("disconnected", "连接已断开");
+        this.hadDisconnect = true;
+        this.setStatus("reconnecting", "正在自动重连");
+        this.scheduleChannelRecovery();
       }
     });
 
@@ -323,17 +437,90 @@ export class PaintNetwork {
       }
 
       if (!this.closedByUser) {
-        this.setStatus("error", "连接发生错误");
+        this.hadDisconnect = true;
+        this.setStatus("reconnecting", "正在自动重连");
+        this.scheduleChannelRecovery();
       }
     });
   }
 
   sendSnapshot() {
-    this.sendMessage({
+    const sent = this.sendMessage({
       type: "snapshot",
       seq: this.sequence,
       snapshot: this.editor.getSnapshot(),
     });
+
+    if (sent) {
+      this.hadDisconnect = false;
+    }
+
+    return sent;
+  }
+
+  handleRecoveredConnection(peer) {
+    if (peer !== this.peer) {
+      return;
+    }
+
+    window.clearTimeout(this.recoveryTimer);
+
+    if (this.channel?.readyState === "open") {
+      this.ready = true;
+
+      if (this.role === "host") {
+        this.sendSnapshot();
+        this.setStatus("connected", "已连接");
+      } else {
+        this.sendMessage({ type: "resync-request" });
+        this.setStatus("syncing", "正在同步画布");
+      }
+
+      return;
+    }
+
+    if (this.role === "host") {
+      this.createHostChannel(peer);
+    } else {
+      this.setStatus("syncing", "正在恢复连接");
+    }
+  }
+
+  scheduleChannelRecovery() {
+    window.clearTimeout(this.recoveryTimer);
+
+    this.recoveryTimer = window.setTimeout(() => {
+      if (this.closedByUser) {
+        return;
+      }
+
+      if (
+        this.role === "host" &&
+        this.peer?.connectionState === "connected"
+      ) {
+        this.createHostChannel(this.peer);
+      } else if (this.peer?.connectionState === "failed") {
+        this.setStatus("reconnect", "需要重新连接");
+      }
+    }, RECOVERY_DELAY);
+  }
+
+  createHostChannel(peer = this.peer) {
+    if (
+      !peer ||
+      this.role !== "host" ||
+      this.channel?.readyState === "open" ||
+      this.channel?.readyState === "connecting"
+    ) {
+      return;
+    }
+
+    const channel = peer.createDataChannel(DATA_CHANNEL_LABEL, {
+      ordered: true,
+    });
+
+    this.setStatus("connecting", "正在恢复连接");
+    this.configureChannel(channel);
   }
 
   sendMessage(message) {
@@ -454,6 +641,14 @@ export class PaintNetwork {
       case "state":
         this.handleState(message);
         break;
+      case "resync-request":
+        if (this.role === "host") {
+          this.sendSnapshot();
+        }
+        break;
+      case "chat-message":
+        this.handleChatMessage(message);
+        break;
       default:
         break;
     }
@@ -465,6 +660,7 @@ export class PaintNetwork {
     }
 
     this.lastSequence = Number(message.seq) || 0;
+    this.hadDisconnect = false;
 
     if (this.role === "guest") {
       this.setStatus("connected", "已连接");
@@ -530,6 +726,28 @@ export class PaintNetwork {
     this.editor.replaceSnapshot(message.snapshot);
   }
 
+  handleChatMessage(message) {
+    if (
+      !message.id ||
+      typeof message.id !== "string" ||
+      typeof message.text !== "string" ||
+      message.text.trim().length === 0 ||
+      message.text.length > 2000 ||
+      message.senderRole === this.role ||
+      this.seenChatIds.has(message.id)
+    ) {
+      return;
+    }
+
+    this.seenChatIds.add(message.id);
+    this.onChatMessage({
+      id: message.id,
+      sentAt: message.sentAt,
+      text: message.text,
+      senderRole: message.senderRole,
+    });
+  }
+
   setStatus(status, label) {
     this.status = status;
     this.onStatusChange({ status, label });
@@ -550,7 +768,11 @@ export class PaintNetwork {
     this.sequence = 0;
     this.lastSequence = 0;
     this.ready = false;
+    this.hadDisconnect = false;
+    window.clearTimeout(this.recoveryTimer);
+    this.recoveryTimer = 0;
     this.incomingChunks.clear();
+    this.seenChatIds.clear();
 
     if (channel) {
       channel.close();
@@ -591,6 +813,61 @@ function waitForIceGathering(peer) {
     peer.addEventListener("icegatheringstatechange", handleStateChange);
     timeoutId = window.setTimeout(finish, ICE_GATHERING_TIMEOUT);
   });
+}
+
+async function compressBytes(bytes) {
+  if (typeof CompressionStream !== "function") {
+    return bytes;
+  }
+
+  const compressedStream = new Blob([bytes])
+    .stream()
+    .pipeThrough(new CompressionStream("deflate-raw"));
+
+  return new Uint8Array(
+    await new Response(compressedStream).arrayBuffer(),
+  );
+}
+
+async function decompressBytes(bytes) {
+  if (typeof DecompressionStream !== "function") {
+    throw new Error("当前浏览器无法读取该邀请码。");
+  }
+
+  const decompressedStream = new Blob([bytes])
+    .stream()
+    .pipeThrough(new DecompressionStream("deflate-raw"));
+
+  return new Uint8Array(
+    await new Response(decompressedStream).arrayBuffer(),
+  );
+}
+
+async function deriveEncryptionKey(password, salt) {
+  const passwordBytes = new TextEncoder().encode(password);
+  const passwordKey = await crypto.subtle.importKey(
+    "raw",
+    passwordBytes,
+    "PBKDF2",
+    false,
+    ["deriveKey"],
+  );
+
+  return crypto.subtle.deriveKey(
+    {
+      name: "PBKDF2",
+      salt,
+      iterations: PBKDF2_ITERATIONS,
+      hash: "SHA-256",
+    },
+    passwordKey,
+    {
+      name: "AES-GCM",
+      length: 256,
+    },
+    false,
+    ["encrypt", "decrypt"],
+  );
 }
 
 function bytesToBase64Url(bytes) {

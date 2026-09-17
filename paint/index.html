@@ -146,19 +146,74 @@
         </div>
       </header>
 
-      <main class="workspace" id="workspace">
-        <div class="canvas-frame" id="canvasFrame">
-          <canvas id="paintCanvas" aria-label="绘画画布">
-            你的浏览器需要支持 Canvas。
-          </canvas>
-          <div class="brush-cursor" id="brushCursor" aria-hidden="true"></div>
-          <span class="canvas-size">1600 × 1000</span>
+      <main class="workspace has-chat" id="workspace">
+        <div class="canvas-area" id="canvasArea">
+          <div class="canvas-frame" id="canvasFrame">
+            <canvas id="paintCanvas" aria-label="绘画画布">
+              你的浏览器需要支持 Canvas。
+            </canvas>
+            <div class="brush-cursor" id="brushCursor" aria-hidden="true"></div>
+            <span class="canvas-size">1600 × 1000</span>
+          </div>
         </div>
+
+        <aside class="chat-panel" id="chatPanel" aria-label="聊天">
+          <header class="chat-header">
+            <div>
+              <h2>聊天</h2>
+              <span class="chat-status" id="chatStatus">未连接</span>
+            </div>
+            <div class="chat-header-actions">
+              <button
+                class="chat-header-button"
+                id="exportChatButton"
+                type="button"
+                disabled
+              >
+                导出 TXT
+              </button>
+              <button
+                class="chat-header-button"
+                id="hideChatButton"
+                type="button"
+              >
+                收起
+              </button>
+            </div>
+          </header>
+          <div
+            class="chat-messages"
+            id="chatMessages"
+            aria-live="polite"
+            aria-label="聊天记录"
+          ></div>
+          <form class="chat-form" id="chatForm">
+            <textarea
+              id="chatInput"
+              rows="2"
+              maxlength="2000"
+              placeholder="输入消息"
+              disabled
+            ></textarea>
+            <button
+              class="text-button primary-button"
+              id="chatSendButton"
+              type="submit"
+              disabled
+            >
+              发送
+            </button>
+          </form>
+        </aside>
       </main>
 
       <footer class="statusbar">
         <span id="statusText">画笔 · 7 px</span>
         <div class="statusbar-actions">
+          <button class="status-chat-button" id="chatToggleButton" type="button">
+            <span>聊天</span>
+            <span class="unread-badge" id="chatUnread" hidden>0</span>
+          </button>
           <span class="network-status" id="networkStatus" data-state="idle">
             <span class="network-dot" aria-hidden="true"></span>
             <span id="networkStatusText">未连接</span>
@@ -211,6 +266,17 @@
       </div>
 
       <section class="network-panel" id="hostPanel" role="tabpanel">
+        <label class="password-field" for="hostPassword">
+          <span>密码</span>
+          <input
+            id="hostPassword"
+            type="password"
+            minlength="6"
+            autocomplete="new-password"
+            placeholder="至少 6 个字符"
+          />
+        </label>
+
         <button
           class="text-button primary-button full-button"
           id="createOfferButton"
@@ -251,6 +317,17 @@
       </section>
 
       <section class="network-panel" id="joinPanel" role="tabpanel" hidden>
+        <label class="password-field" for="joinPassword">
+          <span>密码</span>
+          <input
+            id="joinPassword"
+            type="password"
+            minlength="6"
+            autocomplete="current-password"
+            placeholder="输入联机密码"
+          />
+        </label>
+
         <div class="signal-field">
           <label for="offerInput">邀请码或邀请链接</label>
           <textarea
@@ -278,9 +355,23 @@
 
       <div class="dialog-footer">
         <span class="dialog-message" id="dialogMessage" role="status"></span>
-        <button class="text-button danger-button" id="disconnectButton" type="button">
-          断开连接
-        </button>
+        <div class="dialog-footer-actions">
+          <button
+            class="text-button"
+            id="reconnectButton"
+            type="button"
+            hidden
+          >
+            重新连接
+          </button>
+          <button
+            class="text-button danger-button"
+            id="disconnectButton"
+            type="button"
+          >
+            断开连接
+          </button>
+        </div>
       </div>
     </dialog>
 
