@@ -1,10 +1,13 @@
 import { History } from "./history.js";
 
-export const CANVAS_WIDTH = 1600;
-export const CANVAS_HEIGHT = 1000;
+export const DEFAULT_CANVAS_WIDTH = 1600;
+export const DEFAULT_CANVAS_HEIGHT = 1000;
+export const MIN_CANVAS_SIZE = 320;
+export const MAX_CANVAS_SIZE = 4096;
 
 const MIN_POINT_DISTANCE = 0.65;
 const MAX_DEVICE_PIXEL_RATIO = 3;
+const TARGET_MAX_RENDER_PIXELS = 16000000;
 
 export class CanvasEditor {
   constructor(
@@ -31,6 +34,8 @@ export class CanvasEditor {
     this.tool = "brush";
     this.color = "#1f2622";
     this.brushSize = 7;
+    this.width = DEFAULT_CANVAS_WIDTH;
+    this.height = DEFAULT_CANVAS_HEIGHT;
     this.devicePixelRatio = 1;
     this.history = new History();
 
@@ -39,13 +44,21 @@ export class CanvasEditor {
   }
 
   resize() {
-    this.devicePixelRatio = Math.min(
+    const requestedPixelRatio = Math.min(
       Math.max(window.devicePixelRatio || 1, 1),
       MAX_DEVICE_PIXEL_RATIO,
     );
+    const pixelLimitRatio = Math.sqrt(
+      TARGET_MAX_RENDER_PIXELS / (this.width * this.height),
+    );
 
-    const pixelWidth = Math.round(CANVAS_WIDTH * this.devicePixelRatio);
-    const pixelHeight = Math.round(CANVAS_HEIGHT * this.devicePixelRatio);
+    this.devicePixelRatio = Math.max(
+      1,
+      Math.min(requestedPixelRatio, pixelLimitRatio),
+    );
+
+    const pixelWidth = Math.round(this.width * this.devicePixelRatio);
+    const pixelHeight = Math.round(this.height * this.devicePixelRatio);
 
     if (
       this.canvas.width !== pixelWidth ||
@@ -177,12 +190,12 @@ export class CanvasEditor {
 
   pointFromEvent(event) {
     const bounds = this.canvas.getBoundingClientRect();
-    const x = ((event.clientX - bounds.left) / bounds.width) * CANVAS_WIDTH;
-    const y = ((event.clientY - bounds.top) / bounds.height) * CANVAS_HEIGHT;
+    const x = ((event.clientX - bounds.left) / bounds.width) * this.width;
+    const y = ((event.clientY - bounds.top) / bounds.height) * this.height;
 
     return {
-      x: Math.max(0, Math.min(CANVAS_WIDTH, x)),
-      y: Math.max(0, Math.min(CANVAS_HEIGHT, y)),
+      x: Math.max(0, Math.min(this.width, x)),
+      y: Math.max(0, Math.min(this.height, y)),
       pressure:
         event.pointerType === "pen"
           ? Math.max(0.05, Math.min(1, event.pressure || 0.5))
@@ -267,7 +280,7 @@ export class CanvasEditor {
       0,
       0,
     );
-    this.context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    this.context.clearRect(0, 0, this.width, this.height);
 
     for (const stroke of this.strokes) {
       this.drawStrokeOnContext(this.context, stroke);
@@ -373,16 +386,66 @@ export class CanvasEditor {
       return false;
     }
 
+    const width = this.normalizeCanvasDimension(
+      snapshot.width,
+      DEFAULT_CANVAS_WIDTH,
+    );
+    const height = this.normalizeCanvasDimension(
+      snapshot.height,
+      DEFAULT_CANVAS_HEIGHT,
+    );
+
+    this.setCanvasSize(width, height, {
+      clear: true,
+      notify: false,
+    });
+
     const strokes = snapshot.strokes
       .map((stroke) => this.normalizeStroke(stroke))
       .filter(Boolean);
 
-    this.discardActiveStroke();
-    this.remotePreviews.clear();
     this.strokes = strokes;
-    this.history.reset();
     this.redraw();
     this.notifyChange();
+    return true;
+  }
+
+  setCanvasSize(
+    width,
+    height,
+    {
+      clear = true,
+      notify = true,
+    } = {},
+  ) {
+    const nextWidth = this.normalizeCanvasDimension(width, this.width);
+    const nextHeight = this.normalizeCanvasDimension(height, this.height);
+
+    if (
+      nextWidth === this.width &&
+      nextHeight === this.height &&
+      !clear
+    ) {
+      return false;
+    }
+
+    this.discardActiveStroke();
+    this.width = nextWidth;
+    this.height = nextHeight;
+
+    if (clear) {
+      this.strokes = [];
+      this.remotePreviews.clear();
+      this.history.reset();
+    }
+
+    this.resize();
+    this.redraw();
+
+    if (notify) {
+      this.notifyChange();
+    }
+
     return true;
   }
 
@@ -433,17 +496,17 @@ export class CanvasEditor {
 
   getSnapshot() {
     return {
-      version: 1,
-      width: CANVAS_WIDTH,
-      height: CANVAS_HEIGHT,
+      version: 2,
+      width: this.width,
+      height: this.height,
       strokes: this.strokes.map((stroke) => this.cloneStroke(stroke)),
     };
   }
 
   async exportPNG() {
     const paintCanvas = document.createElement("canvas");
-    paintCanvas.width = CANVAS_WIDTH;
-    paintCanvas.height = CANVAS_HEIGHT;
+    paintCanvas.width = this.width;
+    paintCanvas.height = this.height;
 
     const paintContext = paintCanvas.getContext("2d");
 
@@ -452,12 +515,12 @@ export class CanvasEditor {
     }
 
     const exportCanvas = document.createElement("canvas");
-    exportCanvas.width = CANVAS_WIDTH;
-    exportCanvas.height = CANVAS_HEIGHT;
+    exportCanvas.width = this.width;
+    exportCanvas.height = this.height;
 
     const exportContext = exportCanvas.getContext("2d");
     exportContext.fillStyle = "#ffffff";
-    exportContext.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    exportContext.fillRect(0, 0, this.width, this.height);
     exportContext.drawImage(paintCanvas, 0, 0);
 
     const blob = await new Promise((resolve) => {
@@ -486,6 +549,8 @@ export class CanvasEditor {
       canRedo: this.history.canRedo,
       tool: this.tool,
       brushSize: this.brushSize,
+      canvasWidth: this.width,
+      canvasHeight: this.height,
     });
   }
 
@@ -553,12 +618,25 @@ export class CanvasEditor {
     }
 
     return {
-      x: Math.max(0, Math.min(CANVAS_WIDTH, x)),
-      y: Math.max(0, Math.min(CANVAS_HEIGHT, y)),
+      x: Math.max(0, Math.min(this.width, x)),
+      y: Math.max(0, Math.min(this.height, y)),
       pressure: Number.isFinite(pressure)
         ? Math.max(0, Math.min(1, pressure))
         : 0.5,
     };
+  }
+
+  normalizeCanvasDimension(value, fallback) {
+    const numericValue = Number(value);
+
+    if (!Number.isFinite(numericValue)) {
+      return fallback;
+    }
+
+    return Math.max(
+      MIN_CANVAS_SIZE,
+      Math.min(MAX_CANVAS_SIZE, Math.round(numericValue)),
+    );
   }
 
   discardActiveStroke() {

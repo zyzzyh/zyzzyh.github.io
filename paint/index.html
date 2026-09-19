@@ -153,7 +153,7 @@
               你的浏览器需要支持 Canvas。
             </canvas>
             <div class="brush-cursor" id="brushCursor" aria-hidden="true"></div>
-            <span class="canvas-size">1600 × 1000</span>
+            <span class="canvas-size" id="canvasSizeLabel">1600 × 1000</span>
           </div>
         </div>
 
@@ -181,6 +181,16 @@
               </button>
             </div>
           </header>
+          <label class="chat-nickname" for="nicknameInput">
+            <span>昵称</span>
+            <input
+              id="nicknameInput"
+              type="text"
+              maxlength="20"
+              value="画家0"
+              autocomplete="nickname"
+            />
+          </label>
           <div
             class="chat-messages"
             id="chatMessages"
@@ -276,6 +286,41 @@
             placeholder="至少 6 个字符"
           />
         </label>
+
+        <div class="canvas-size-control">
+          <span>画布尺寸</span>
+          <div class="canvas-size-fields">
+            <label>
+              宽度
+              <input
+                id="canvasWidthInput"
+                type="number"
+                min="320"
+                max="4096"
+                step="10"
+                value="1600"
+              />
+            </label>
+            <label>
+              高度
+              <input
+                id="canvasHeightInput"
+                type="number"
+                min="320"
+                max="4096"
+                step="10"
+                value="1000"
+              />
+            </label>
+            <button
+              class="text-button"
+              id="applyCanvasSizeButton"
+              type="button"
+            >
+              应用
+            </button>
+          </div>
+        </div>
 
         <button
           class="text-button primary-button full-button"

@@ -85,6 +85,26 @@ export function buildModelGeometry(document, options = {}) {
     }
   }
 
+  // Mirror the painted half across the requested world plane. The source
+  // geometry remains intact and the mirrored normals are flipped for lighting.
+  if (options.symmetry === 'xy' || options.symmetry === 'z') {
+    const mirrorAxis = options.symmetry === 'xy' ? 2 : 0;
+    const sourcePositions = positions.slice();
+    const sourceNormals = normals.slice();
+    const sourceColors = colors.slice();
+    for (let index = 0; index < sourcePositions.length; index += 3) {
+      const coordinate = sourcePositions[index + mirrorAxis];
+      if (Math.abs(coordinate) < 0.00001) continue;
+      const mirrored = [sourcePositions[index], sourcePositions[index + 1], sourcePositions[index + 2]];
+      mirrored[mirrorAxis] *= -1;
+      positions.push(...mirrored);
+      const mirroredNormal = [sourceNormals[index], sourceNormals[index + 1], sourceNormals[index + 2]];
+      mirroredNormal[mirrorAxis] *= -1;
+      normals.push(...mirroredNormal);
+      colors.push(sourceColors[index], sourceColors[index + 1], sourceColors[index + 2], sourceColors[index + 3]);
+    }
+  }
+
   if (options.base) {
     const baseHeight = Math.max(0.05, Number(options.baseThickness) || 1);
     const x0 = -document.width * stride / 2; const x1 = document.width * stride / 2;

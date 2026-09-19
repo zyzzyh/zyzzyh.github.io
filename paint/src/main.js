@@ -1,4 +1,8 @@
-import { CANVAS_WIDTH, CanvasEditor } from "./canvas-editor.js";
+import {
+  CanvasEditor,
+  MAX_CANVAS_SIZE,
+  MIN_CANVAS_SIZE,
+} from "./canvas-editor.js";
 import { PaintNetwork } from "./network.js";
 
 const elements = {
@@ -6,6 +10,7 @@ const elements = {
   canvasArea: document.querySelector("#canvasArea"),
   canvas: document.querySelector("#paintCanvas"),
   canvasFrame: document.querySelector("#canvasFrame"),
+  canvasSizeLabel: document.querySelector("#canvasSizeLabel"),
   brushCursor: document.querySelector("#brushCursor"),
   brushTool: document.querySelector("#brushTool"),
   eraserTool: document.querySelector("#eraserTool"),
@@ -34,6 +39,9 @@ const elements = {
   joinPanel: document.querySelector("#joinPanel"),
   hostPassword: document.querySelector("#hostPassword"),
   joinPassword: document.querySelector("#joinPassword"),
+  canvasWidthInput: document.querySelector("#canvasWidthInput"),
+  canvasHeightInput: document.querySelector("#canvasHeightInput"),
+  applyCanvasSizeButton: document.querySelector("#applyCanvasSizeButton"),
   createOfferButton: document.querySelector("#createOfferButton"),
   offerField: document.querySelector("#offerField"),
   offerOutput: document.querySelector("#offerOutput"),
@@ -58,12 +66,20 @@ const elements = {
   hideChatButton: document.querySelector("#hideChatButton"),
   chatToggleButton: document.querySelector("#chatToggleButton"),
   chatUnread: document.querySelector("#chatUnread"),
+  nicknameInput: document.querySelector("#nicknameInput"),
 };
 
 let network;
 let connectedDialogTimer = 0;
 const chatMessages = [];
 let unreadChatCount = 0;
+let localNickname = "画家0";
+let peerNickname = "画家1";
+let nicknameManuallyEdited = false;
+let currentNetworkState = {
+  status: "idle",
+  label: "未连接",
+};
 
 const editor = new CanvasEditor(elements.canvas, {
   onChange: updateInterface,
@@ -82,6 +98,7 @@ network = new PaintNetwork(editor, {
   onStatusChange: updateNetworkStatus,
   onError: handleNetworkError,
   onChatMessage: receiveChatMessage,
+  onPeerName: receivePeerName,
 });
 
 function updateInterface(state) {
@@ -107,10 +124,26 @@ function updateInterface(state) {
     "is-eraser",
     state.tool === "eraser",
   );
+
+  const sizeChanged =
+    elements.canvasSizeLabel.dataset.width !== String(state.canvasWidth) ||
+    elements.canvasSizeLabel.dataset.height !== String(state.canvasHeight);
+
+  elements.canvasSizeLabel.dataset.width = String(state.canvasWidth);
+  elements.canvasSizeLabel.dataset.height = String(state.canvasHeight);
+  elements.canvasSizeLabel.textContent = `${state.canvasWidth} × ${state.canvasHeight}`;
+  elements.canvasWidthInput.value = String(state.canvasWidth);
+  elements.canvasHeightInput.value = String(state.canvasHeight);
+
+  if (sizeChanged) {
+    fitCanvasFrame();
+  }
+
   updateBrushCursorSize(state.brushSize);
 }
 
 function updateNetworkStatus({ status, label }) {
+  currentNetworkState = { status, label };
   setStatusElement(elements.networkStatus, elements.networkStatusText, {
     status,
     label,
@@ -135,6 +168,7 @@ function updateNetworkStatus({ status, label }) {
     status === "idle" || status === "error";
   elements.reconnectButton.hidden =
     status !== "reconnecting" && status !== "reconnect";
+  updateHostCanvasControls();
 
   if (status === "connected") {
     elements.hostPassword.value = "";
@@ -219,7 +253,7 @@ function setColor(color) {
 
 function updateBrushCursorSize(size) {
   const canvasBounds = elements.canvas.getBoundingClientRect();
-  const displayScale = canvasBounds.width / CANVAS_WIDTH;
+  const displayScale = canvasBounds.width / editor.width;
   const cursorSize = Math.max(5, size * displayScale);
 
   elements.brushCursor.style.width = `${cursorSize}px`;
@@ -248,10 +282,15 @@ function fitCanvasFrame() {
     return;
   }
 
-  const scale = Math.min(bounds.width / 1600, bounds.height / 1000);
-  const width = Math.max(1, Math.floor(1600 * scale));
-  const height = Math.max(1, Math.floor(1000 * scale));
+  const scale = Math.min(
+    bounds.width / editor.width,
+    bounds.height / editor.height,
+  );
+  const width = Math.max(1, Math.floor(editor.width * scale));
+  const height = Math.max(1, Math.floor(editor.height * scale));
 
+  elements.canvasFrame.style.aspectRatio =
+    `${editor.width} / ${editor.height}`;
   elements.canvasFrame.style.width = `${width}px`;
   elements.canvasFrame.style.height = `${height}px`;
 }
@@ -259,11 +298,83 @@ function fitCanvasFrame() {
 function updateChatConnectionState({ status, label }) {
   elements.chatStatus.dataset.state = status;
   elements.chatStatus.textContent =
-    status === "connected" ? "已连接" : label;
+    status === "connected" ? `已连接 · ${peerNickname}` : label;
 
   const connected = status === "connected";
   elements.chatInput.disabled = !connected;
   elements.chatSendButton.disabled = !connected;
+}
+
+function updateHostCanvasControls() {
+  const locked = network.role === "guest" && network.connected;
+  elements.canvasWidthInput.disabled = locked;
+  elements.canvasHeightInput.disabled = locked;
+  elements.applyCanvasSizeButton.disabled = locked;
+}
+
+function applyHostCanvasSize({ confirmClear = true } = {}) {
+  const width = Math.max(
+    MIN_CANVAS_SIZE,
+    Math.min(MAX_CANVAS_SIZE, Number(elements.canvasWidthInput.value)),
+  );
+  const height = Math.max(
+    MIN_CANVAS_SIZE,
+    Math.min(MAX_CANVAS_SIZE, Number(elements.canvasHeightInput.value)),
+  );
+
+  if (!Number.isFinite(width) || !Number.isFinite(height)) {
+    setDialogMessage("画布尺寸无效", true);
+    return false;
+  }
+
+  const changed = width !== editor.width || height !== editor.height;
+
+  if (
+    changed &&
+    editor.hasStrokes &&
+    confirmClear &&
+    !window.confirm("调整画布尺寸会清空当前画布，是否继续？")
+  ) {
+    return false;
+  }
+
+  editor.setCanvasSize(width, height, {
+    clear: changed,
+  });
+  elements.canvasWidthInput.value = String(width);
+  elements.canvasHeightInput.value = String(height);
+
+  if (changed && network.connected && network.role === "host") {
+    network.shareCanvasSnapshot(editor.getSnapshot());
+  }
+
+  return true;
+}
+
+function applyDefaultNickname(role) {
+  if (nicknameManuallyEdited) {
+    return;
+  }
+
+  localNickname = role === "guest" ? "画家1" : "画家0";
+  elements.nicknameInput.value = localNickname;
+  network.setLocalName(localNickname);
+}
+
+function commitLocalNickname() {
+  const fallback = network.role === "guest" ? "画家1" : "画家0";
+  const normalized =
+    elements.nicknameInput.value.replace(/\s+/g, " ").trim().slice(0, 20) ||
+    fallback;
+
+  localNickname = normalized;
+  elements.nicknameInput.value = normalized;
+  network.setLocalName(normalized);
+}
+
+function receivePeerName(name) {
+  peerNickname = name;
+  updateChatConnectionState(currentNetworkState);
 }
 
 function setChatOpen(open) {
@@ -294,6 +405,9 @@ function updateUnreadBadge() {
 
 function sendChatMessage() {
   const text = elements.chatInput.value.trim();
+  const senderName =
+    localNickname.replace(/\s+/g, " ").trim().slice(0, 20) ||
+    (network.role === "guest" ? "画家1" : "画家0");
 
   if (!text || !network.connected) {
     return;
@@ -302,11 +416,19 @@ function sendChatMessage() {
   const message = {
     id: createChatMessageId(),
     sentAt: new Date().toISOString(),
-    sender: "我",
+    sender: senderName,
     text,
+    isLocal: true,
   };
 
-  if (!network.sendChatMessage(message)) {
+  if (
+    !network.sendChatMessage({
+      id: message.id,
+      sentAt: message.sentAt,
+      text: message.text,
+      senderName,
+    })
+  ) {
     return;
   }
 
@@ -320,8 +442,9 @@ function receiveChatMessage(message) {
   chatMessages.push({
     id: message.id,
     sentAt: message.sentAt,
-    sender: message.senderRole === "host" ? "房主" : "访客",
+    sender: message.senderName,
     text: message.text,
+    isLocal: false,
   });
 
   if (!elements.workspace.classList.contains("has-chat")) {
@@ -351,7 +474,7 @@ function renderChatMessages(forceScroll = false) {
       const article = document.createElement("article");
       article.className = "chat-message";
 
-      if (message.sender === "我") {
+      if (message.isLocal) {
         article.classList.add("is-local");
       }
 
@@ -544,6 +667,12 @@ function resetSignalControls() {
 async function createHostInvite() {
   const password = elements.hostPassword.value.trim();
 
+  if (!applyHostCanvasSize()) {
+    return;
+  }
+
+  applyDefaultNickname("host");
+
   if (!password && !network.hasSessionPassword) {
     setDialogMessage("请先设置密码", true);
     elements.hostPassword.focus();
@@ -708,6 +837,7 @@ elements.createAnswerButton.addEventListener("click", async () => {
     return;
   }
 
+  applyDefaultNickname("guest");
   elements.createAnswerButton.disabled = true;
   elements.createAnswerButton.textContent = "生成中";
 
@@ -752,6 +882,24 @@ elements.reconnectButton.addEventListener("click", async () => {
 
   switchNetworkTab("host");
   await createHostInvite();
+});
+
+elements.applyCanvasSizeButton.addEventListener("click", () => {
+  applyHostCanvasSize();
+});
+
+elements.nicknameInput.addEventListener("input", () => {
+  nicknameManuallyEdited = true;
+  localNickname = elements.nicknameInput.value.slice(0, 20);
+});
+
+elements.nicknameInput.addEventListener("change", commitLocalNickname);
+
+elements.nicknameInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    elements.nicknameInput.blur();
+  }
 });
 
 elements.chatForm.addEventListener("submit", (event) => {
@@ -872,6 +1020,7 @@ compactLayout.addEventListener("change", (event) => {
 
 elements.sizeOutput.value = String(editor.brushSize);
 elements.disconnectButton.disabled = true;
+network.setLocalName(localNickname);
 
 updateInterface({
   strokeCount: 0,
@@ -879,6 +1028,8 @@ updateInterface({
   canRedo: false,
   tool: editor.tool,
   brushSize: editor.brushSize,
+  canvasWidth: editor.width,
+  canvasHeight: editor.height,
 });
 
 updateNetworkStatus({

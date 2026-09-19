@@ -13,6 +13,15 @@ const ICE_SERVERS = [
   },
 ];
 
+function normalizeDisplayName(name) {
+  const normalized = String(name || "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 20);
+
+  return normalized || "画家";
+}
+
 export async function encodeSignal(sdp) {
   const bytes = new TextEncoder().encode(sdp);
 
@@ -141,12 +150,14 @@ export class PaintNetwork {
       onStatusChange = () => {},
       onError = () => {},
       onChatMessage = () => {},
+      onPeerName = () => {},
     } = {},
   ) {
     this.editor = editor;
     this.onStatusChange = onStatusChange;
     this.onError = onError;
     this.onChatMessage = onChatMessage;
+    this.onPeerName = onPeerName;
 
     this.peer = null;
     this.channel = null;
@@ -159,6 +170,8 @@ export class PaintNetwork {
     this.hadDisconnect = false;
     this.recoveryTimer = 0;
     this.sessionPassword = "";
+    this.localName = "画家0";
+    this.peerName = "画家1";
     this.incomingChunks = new Map();
     this.seenChatIds = new Set();
     this.chunkId = 0;
@@ -170,6 +183,33 @@ export class PaintNetwork {
 
   get hasSessionPassword() {
     return this.sessionPassword.length >= 6;
+  }
+
+  setLocalName(name) {
+    const normalizedName = normalizeDisplayName(name);
+    this.localName = normalizedName;
+
+    if (this.connected) {
+      this.sendMessage({
+        type: "nickname",
+        name: normalizedName,
+      });
+    }
+
+    return normalizedName;
+  }
+
+  shareCanvasSnapshot(snapshot) {
+    if (!this.connected || this.role !== "host" || !snapshot) {
+      return false;
+    }
+
+    this.sequence += 1;
+    return this.sendMessage({
+      type: "canvas",
+      seq: this.sequence,
+      snapshot,
+    });
   }
 
   async createHostOffer(password) {
@@ -310,7 +350,7 @@ export class PaintNetwork {
     return true;
   }
 
-  sendChatMessage({ id, sentAt, text }) {
+  sendChatMessage({ id, sentAt, text, senderName }) {
     if (!this.connected) {
       return false;
     }
@@ -321,6 +361,7 @@ export class PaintNetwork {
       sentAt,
       text,
       senderRole: this.role,
+      senderName: normalizeDisplayName(senderName || this.localName),
     });
   }
 
@@ -400,6 +441,10 @@ export class PaintNetwork {
       }
 
       this.ready = true;
+      this.sendMessage({
+        type: "nickname",
+        name: this.localName,
+      });
 
       if (this.role === "host") {
         this.sendSnapshot();
@@ -649,6 +694,12 @@ export class PaintNetwork {
       case "chat-message":
         this.handleChatMessage(message);
         break;
+      case "nickname":
+        this.setPeerName(message.name);
+        break;
+      case "canvas":
+        this.handleCanvas(message);
+        break;
       default:
         break;
     }
@@ -726,6 +777,31 @@ export class PaintNetwork {
     this.editor.replaceSnapshot(message.snapshot);
   }
 
+  handleCanvas(message) {
+    if (
+      this.role !== "guest" ||
+      !message.snapshot ||
+      !Number.isFinite(message.seq) ||
+      message.seq <= this.lastSequence
+    ) {
+      return;
+    }
+
+    this.lastSequence = message.seq;
+    this.editor.replaceSnapshot(message.snapshot);
+  }
+
+  setPeerName(name) {
+    const normalizedName = normalizeDisplayName(name);
+
+    if (normalizedName === this.peerName) {
+      return;
+    }
+
+    this.peerName = normalizedName;
+    this.onPeerName(normalizedName);
+  }
+
   handleChatMessage(message) {
     if (
       !message.id ||
@@ -739,12 +815,14 @@ export class PaintNetwork {
       return;
     }
 
+    this.setPeerName(message.senderName || this.peerName);
     this.seenChatIds.add(message.id);
     this.onChatMessage({
       id: message.id,
       sentAt: message.sentAt,
       text: message.text,
       senderRole: message.senderRole,
+      senderName: this.peerName,
     });
   }
 

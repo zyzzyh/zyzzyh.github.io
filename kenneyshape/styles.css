@@ -66,6 +66,8 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 .line-glyph:before { content: ""; position: absolute; width: 21px; height: 1.5px; background: currentColor; transform: rotate(-45deg); top: 9px; left: -1px; }
 .line-glyph:after { content: ""; position: absolute; width: 4px; height: 4px; border: 1px solid currentColor; border-radius: 50%; top: 2px; left: 1px; box-shadow: 13px 13px 0 -1px var(--panel), 13px 13px 0 0 currentColor; }
 .rect-glyph { border: 1.5px solid currentColor; width: 16px; height: 14px; margin-top: 2px; }
+.pan-glyph:before { content: "✥"; position: absolute; inset: -2px 0 0; text-align: center; font-size: 19px; line-height: 19px; }
+.zoom-glyph:before { content: ""; position: absolute; width: 11px; height: 11px; border: 1.5px solid currentColor; border-radius: 50%; left: 1px; top: 1px; }.zoom-glyph:after { content: "+"; position: absolute; right: 0; bottom: -1px; font: 12px Consolas, monospace; }
 .rail-separator { height: 1px; background: var(--border); margin: 17px 3px; }
 .view-controls { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .rail-icon-button { width: 38px; height: 34px; display: flex; align-items: center; justify-content: center; background: transparent; color: var(--muted); border-radius: 4px; }
@@ -88,6 +90,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 .canvas-stage { position: relative; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; background-color: #282b2f; background-image: linear-gradient(45deg, #25282c 25%, transparent 25%), linear-gradient(-45deg, #25282c 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #25282c 75%), linear-gradient(-45deg, transparent 75%, #25282c 75%); background-size: 28px 28px; background-position: 0 0, 0 14px, 14px -14px, -14px 0px; }
 .canvas-shadow { position: absolute; width: var(--canvas-size); height: var(--canvas-size); box-shadow: 0 18px 45px rgba(0,0,0,.32); pointer-events: none; }
 #pixelCanvas { width: var(--canvas-size); height: var(--canvas-size); image-rendering: pixelated; cursor: crosshair; border: 1px solid #606771; position: relative; background: transparent; touch-action: none; }
+.canvas-shadow { transition: transform .05s linear; }.canvas-stage.pan-mode #pixelCanvas, .canvas-stage.pan-mode { cursor: grab; }.canvas-stage.pan-mode:active, .canvas-stage.pan-mode:active #pixelCanvas { cursor: grabbing; }.canvas-stage.zoom-mode #pixelCanvas { cursor: zoom-in; }
 .canvas-stage.hide-grid #pixelCanvas { border-color: #42474f; }
 .canvas-hint { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); color: #aab0b7; font-size: 11px; padding: 6px 10px; background: rgba(26,28,30,.78); border: 1px solid rgba(90,97,105,.35); border-radius: 3px; pointer-events: none; opacity: 0; transition: opacity .2s; }
 .canvas-hint.visible { opacity: 1; }
@@ -152,6 +155,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 .model-panel { padding: 14px 16px 16px; overflow-y: auto; }.model-panel .section-heading { margin-bottom: 9px; }
 .segmented { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; padding: 3px; background: #16181a; border: 1px solid var(--border); border-radius: 4px; margin-bottom: 13px; }
 .geometry-button { height: 29px; background: transparent; color: var(--muted); border-radius: 2px; font-size: 10px; }.geometry-button.active { background: var(--accent-soft); color: var(--accent); }
+.symmetry-heading { margin-top: 17px; margin-bottom: 8px !important; }.symmetry-note { color: var(--faint); font-size: 8px; font-weight: 400; }.symmetry-segmented { grid-template-columns: repeat(3, 1fr); margin-bottom: 13px; }.symmetry-button { height: 27px; background: transparent; color: var(--muted); border-radius: 2px; font-size: 9px; }.symmetry-button.active { background: var(--accent-soft); color: var(--accent); }
 .model-setting { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 8px 0; color: var(--muted); font-size: 10px; }.model-setting .number-input { width: 122px; }.model-setting .number-input input { padding: 6px 7px; }
 .base-toggle, .height-label-toggle { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 10px; margin: 12px 0; }.base-toggle input, .height-label-toggle input { accent-color: var(--accent); }
 .base-thickness-row { opacity: .4; pointer-events: none; }.base-thickness-row.enabled { opacity: 1; pointer-events: auto; }
