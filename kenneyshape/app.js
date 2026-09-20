@@ -13,6 +13,7 @@ const state = {
   isDrawing: false, isPanning: false, startCell: null, panStart: null, viewOffset: { x: 0, y: 0 }, history: [], historyIndex: -1, dirty: false, geometry: 'voxel', symmetry: 'none', modelOptions: { pixelSize: 1, heightScale: 1, gap: 0, base: false, baseThickness: 1 },
 };
 const toolNames = { pencil: '铅笔', eraser: '橡皮', fill: '填充', picker: '吸管', line: '直线', rect: '矩形', pan: '拖动', zoom: '放大' };
+const jsonPrompt = `你是 Pixel Foundry 的像素高度模型生成器。请根据用户描述生成一个可以直接导入的 JSON 文件，不要输出 Markdown，不要输出解释，只输出一个合法 JSON 对象。\n\n格式要求：\n{\n  "format": "pixelfoundry-rgbah",\n  "version": 2,\n  "width": <整数，4 到 128>,\n  "height": <整数，4 到 128>,\n  "pixels": [[R,G,B,A,H], ...]\n}\n\n数据要求：\n- pixels 必须严格按从上到下、每行从左到右排列，共 width * height 项。\n- R、G、B、A 是 0 到 255 的整数。H 是 0 到 16 的整数。\n- A=0 或 H=0 表示该像素不生成模型几何。\n- 可见像素应同时设置 A>0 和 H>0。\n- 使用纯色像素和整数高度，形成清晰的像素风模型。\n- 如果用户没有指定画布尺寸，选择能完整容纳模型的最小方形画布，尺寸至少为 8。\n- 如果用户描述了颜色、材质或高度层次，请将其转换为像素颜色和 H 值。\n- 不要添加 pixels 以外的字段，不要使用注释，不要使用 trailing comma。\n\n用户模型描述：\n<在这里粘贴用户对模型的描述>`;
 
 function normalizeColor(value) { let hex = String(value || '').trim().replace('#', '').toUpperCase(); if (hex.length === 3) hex = hex.split('').map((c) => c + c).join(''); if (hex.length === 6) hex += 'FF'; return /^[0-9A-F]{8}$/.test(hex) ? `#${hex}` : '#E8ECF1FF'; }
 function colorToRgba(value) { const hex = normalizeColor(value).slice(1); return [0, 2, 4, 6].map((index) => parseInt(hex.slice(index, index + 2), 16)); }
@@ -54,7 +55,7 @@ function paintStart(event) {
   if (event.button === 2) { applyPaint(getCell(event), 'picker'); event.preventDefault(); return; }
   if (event.button !== 0) return;
   if (state.tool === 'zoom') { state.zoom = Math.min(32, state.zoom + 4); updateUi(); showToast(`画布缩放至 ${state.zoom}×`); return; }
-  if (state.tool === 'pan') { state.isPanning = true; state.panStart = { x: event.clientX, y: event.clientY, offsetX: state.viewOffset.x, offsetY: state.viewOffset.y }; canvas.setPointerCapture?.(event.pointerId); return; }
+  if (state.tool === 'pan') { beginPan(event, canvas); return; }
   const cell = getCell(event); state.isDrawing = true; state.startCell = cell; canvas.setPointerCapture?.(event.pointerId); if (state.tool === 'fill') fillAt(cell); else if (state.tool !== 'line' && state.tool !== 'rect') applyPaint(cell); draw(); updateModel();
 }
 function paintMove(event) {
@@ -63,7 +64,7 @@ function paintMove(event) {
   if (state.isDrawing && (state.tool === 'pencil' || state.tool === 'eraser')) { applyPaint(cell); draw(); updateModel(); }
 }
 function paintEnd(event) {
-  if (state.isPanning) { state.isPanning = false; state.panStart = null; return; }
+  if (state.isPanning) { state.isPanning = false; state.panStart = null; canvas.releasePointerCapture?.(event.pointerId); stage.releasePointerCapture?.(event.pointerId); return; }
   if (!state.isDrawing) return; const cell = getCell(event); if (state.tool === 'line' || state.tool === 'rect') (state.tool === 'line' ? lineCells(state.startCell, cell) : rectCells(state.startCell, cell)).forEach((item) => applyPaint(item, 'pencil')); state.isDrawing = false; state.startCell = null; draw(); updateModel(); commitHistory();
 }
 
@@ -72,7 +73,18 @@ function setHeightInput(value) { const height = clampHeight(value); document.get
 function getHeightInput() { return clampHeight(document.getElementById('heightRange').value); }
 function selectTool(tool) { state.tool = tool; document.querySelectorAll('.tool-button').forEach((button) => button.classList.toggle('active', button.dataset.tool === tool)); stage.classList.toggle('pan-mode', tool === 'pan'); stage.classList.toggle('zoom-mode', tool === 'zoom'); updateUi(); }
 function setDrawMode(mode) { state.drawMode = mode; document.querySelectorAll('.draw-mode').forEach((button) => button.classList.toggle('active', button.dataset.drawMode === mode)); stage.classList.toggle('height-mode', mode === 'height'); draw(); updateUi(); }
-function applyCanvasTransform() { const transform = `translate(${state.viewOffset.x}px, ${state.viewOffset.y}px)`; canvas.style.transform = transform; document.querySelector('.canvas-shadow').style.transform = transform; }
+function beginPan(event, captureTarget = stage) { state.isPanning = true; state.panStart = { x: event.clientX, y: event.clientY, offsetX: state.viewOffset.x, offsetY: state.viewOffset.y }; captureTarget.setPointerCapture?.(event.pointerId); event.preventDefault(); }
+function applyCanvasTransform() {
+  const left = `calc(50% + ${state.viewOffset.x}px)`;
+  const top = `calc(50% + ${state.viewOffset.y}px)`;
+  const shadow = document.querySelector('.canvas-shadow');
+  canvas.style.left = left;
+  canvas.style.top = top;
+  canvas.style.transform = 'translate(-50%, -50%)';
+  shadow.style.left = left;
+  shadow.style.top = top;
+  shadow.style.transform = 'translate(-50%, -50%)';
+}
 function updateUi() { document.getElementById('canvasSizeLabel').textContent = `${state.width} × ${state.height} px`; document.getElementById('zoomLabel').textContent = `${state.zoom}×`; document.getElementById('activeToolLabel').textContent = `${state.drawMode === 'height' ? '高度绘制' : '颜色绘制'} · ${toolNames[state.tool]}`; root.style.setProperty('--canvas-size', `${state.zoom * Math.min(state.width, state.height)}px`); applyCanvasTransform(); updateHistoryButtons(); updateDirty(); }
 function syncSizeInputs() { document.getElementById('widthInput').value = state.width; document.getElementById('heightInput').value = state.height; }
 function resizeCanvas(width, height, preserve = false) { width = Math.max(4, Math.min(128, Number(width) || 32)); height = Math.max(4, Math.min(128, Number(height) || 32)); const old = state.pixels; const oldWidth = state.width; state.width = width; state.height = height; state.pixels = blankPixels(width, height); if (preserve) for (let y = 0; y < Math.min(height, Math.floor(old.length / oldWidth)); y += 1) for (let x = 0; x < Math.min(width, oldWidth); x += 1) state.pixels[cellIndex(x, y)] = [...old[y * oldWidth + x]]; state.zoom = Math.max(4, Math.min(24, Math.floor(512 / Math.max(width, height)))); syncSizeInputs(); draw(); updateModel(); updateUi(); }
@@ -90,6 +102,7 @@ function exportPng() { const off = document.createElement('canvas'); off.width =
 async function importFile(file) { let documentData; if (file.type === 'image/png' || file.name.toLowerCase().endsWith('.png')) { const image = await new Promise((resolve, reject) => { const image = new Image(); image.onload = () => resolve(image); image.onerror = reject; image.src = URL.createObjectURL(file); }); const width = Math.min(128, image.naturalWidth); const height = Math.min(128, image.naturalHeight); const off = document.createElement('canvas'); off.width = width; off.height = height; off.getContext('2d').drawImage(image, 0, 0, width, height); const values = off.getContext('2d').getImageData(0, 0, width, height).data; const pixels = []; for (let index = 0; index < values.length; index += 4) pixels.push([values[index], values[index + 1], values[index + 2], values[index + 3]]); documentData = normalizeDocument({ width, height, pixels }); } else if (file.name.toLowerCase().endsWith('.json')) documentData = normalizeDocument(JSON.parse(await file.text())); else documentData = parseRgbaText(await file.text()); state.width = documentData.width; state.height = documentData.height; state.pixels = documentData.pixels; state.history = [snapshot()]; state.historyIndex = 0; state.dirty = false; state.zoom = Math.max(4, Math.min(24, Math.floor(512 / Math.max(state.width, state.height)))); syncSizeInputs(); draw(); updateModel(); updateUi(); showToast(`已导入 ${state.width} × ${state.height} 画布`); }
 
 canvas.addEventListener('pointerdown', paintStart); canvas.addEventListener('pointermove', paintMove); canvas.addEventListener('pointerup', paintEnd); canvas.addEventListener('pointercancel', paintEnd); canvas.addEventListener('contextmenu', (event) => event.preventDefault());
+stage.addEventListener('pointerdown', (event) => { if (state.tool === 'pan' && event.target !== canvas) beginPan(event, stage); }); stage.addEventListener('pointermove', paintMove); stage.addEventListener('pointerup', paintEnd); stage.addEventListener('pointercancel', paintEnd);
 document.querySelectorAll('.tool-button').forEach((button) => button.addEventListener('click', () => selectTool(button.dataset.tool))); document.querySelectorAll('.draw-mode').forEach((button) => button.addEventListener('click', () => setDrawMode(button.dataset.drawMode)));
 document.getElementById('heightRange').addEventListener('input', (event) => setHeightInput(event.target.value)); document.getElementById('heightLabels').addEventListener('change', (event) => { state.showHeightLabels = event.target.checked; draw(); });
 document.getElementById('colorInput').addEventListener('input', (event) => setColor(event.target.value)); document.getElementById('hexInput').addEventListener('change', (event) => setColor(event.target.value)); document.querySelectorAll('.swatch').forEach((swatch) => swatch.addEventListener('click', () => setColor(swatch.dataset.color)));
@@ -98,6 +111,7 @@ document.getElementById('zoomOut').addEventListener('click', () => { state.zoom 
 document.getElementById('resizeButton').addEventListener('click', () => { resizeCanvas(document.getElementById('widthInput').value, document.getElementById('heightInput').value, true); commitHistory(); showToast('画布尺寸已更新'); });
 document.querySelectorAll('.geometry-button').forEach((button) => button.addEventListener('click', () => { state.geometry = button.dataset.geometry; document.querySelectorAll('.geometry-button').forEach((item) => item.classList.toggle('active', item === button)); updateModel(); }));
 document.querySelectorAll('.symmetry-button').forEach((button) => button.addEventListener('click', () => { state.symmetry = button.dataset.symmetry; document.querySelectorAll('.symmetry-button').forEach((item) => item.classList.toggle('active', item === button)); updateModel(); showToast(state.symmetry === 'none' ? '已关闭镜像对称' : `已启用${state.symmetry.toUpperCase()} 镜像`); }));
+document.getElementById('copyPromptButton').addEventListener('click', async () => { try { await navigator.clipboard.writeText(jsonPrompt); showToast('JSON 生成 Prompt 已复制'); } catch { showToast('复制失败，请检查浏览器剪贴板权限'); } });
 ['pixelSize', 'heightScale', 'pixelGap', 'baseThickness'].forEach((id) => document.getElementById(id).addEventListener('input', (event) => { state.modelOptions[id === 'pixelSize' ? 'pixelSize' : id === 'heightScale' ? 'heightScale' : id === 'pixelGap' ? 'gap' : 'baseThickness'] = Number(event.target.value); updateModel(); })); document.getElementById('baseToggle').addEventListener('change', (event) => { state.modelOptions.base = event.target.checked; document.querySelector('.base-thickness-row').classList.toggle('enabled', event.target.checked); updateModel(); }); document.getElementById('resetView').addEventListener('click', () => modelRenderer.resetView());
 document.getElementById('exportGlb').addEventListener('click', async () => { await exportGlb(modelRenderer.modelRoot, getFileName()); showToast('已导出 GLB'); }); document.getElementById('exportObj').addEventListener('click', () => { exportObj(modelRenderer.modelRoot, getFileName()); showToast('已导出 OBJ'); });
 document.querySelectorAll('.mode-button').forEach((button) => button.addEventListener('click', () => { document.querySelectorAll('.mode-button').forEach((item) => item.classList.toggle('active', item === button)); document.getElementById('workspace').classList.toggle('draw-only', button.dataset.workspace === 'draw'); }));

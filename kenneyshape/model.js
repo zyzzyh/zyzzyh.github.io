@@ -87,8 +87,8 @@ export function buildModelGeometry(document, options = {}) {
 
   // Mirror the painted half across the requested world plane. The source
   // geometry remains intact and the mirrored normals are flipped for lighting.
-  if (options.symmetry === 'xy' || options.symmetry === 'z') {
-    const mirrorAxis = options.symmetry === 'xy' ? 2 : 0;
+  if (options.symmetry === 'xy' || options.symmetry === 'xz' || options.symmetry === 'yz') {
+    const mirrorAxis = options.symmetry === 'xy' ? 2 : options.symmetry === 'xz' ? 1 : 0;
     const sourcePositions = positions.slice();
     const sourceNormals = normals.slice();
     const sourceColors = colors.slice();
